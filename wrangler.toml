@@ -1,0 +1,10 @@
+name = "ga-pick-partner"
+main = "src/index.js"
+compatibility_date = "2026-08-05"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+html_handling = "none"
+not_found_handling = "none"
+run_worker_first = ["/*"]
