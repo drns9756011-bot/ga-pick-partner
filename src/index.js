@@ -24,7 +24,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = decodeURIComponent(url.pathname).replace(/\/+$/, "") || "/";
-    const routeVersion = "20260821-partner-web-split-v2";
+    const routeVersion = "20260821-partner-web-split-v1";
 
     if (path === "/robots.txt") {
       return new Response("User-agent: *\nDisallow: /\n", {
@@ -39,8 +39,7 @@ export default {
       headers.set("Cache-Control", "no-store");
       return new Response(upstream.body, { status: upstream.status, statusText: upstream.statusText, headers });
     }
-    if (path === "/" || path === "/index.html") return Response.redirect(`${PARTNER_ORIGIN}/login`, 308);
-    if (path === "/login") return serveAsset(request, env, "/seller/index.html", routeVersion);
+    if (path === "/" || path === "/index.html" || path === "/login") return serveAsset(request, env, "/seller/index.html", routeVersion);
     if (path === "/register" || path === "/register/index.html") return serveAsset(request, env, "/seller/register/index.html", routeVersion);
     if (path === "/seller" || path === "/seller/index.html") return Response.redirect(`${PARTNER_ORIGIN}/`, 308);
     if (path === "/seller/register" || path === "/seller/register/index.html") return Response.redirect(`${PARTNER_ORIGIN}/register`, 308);

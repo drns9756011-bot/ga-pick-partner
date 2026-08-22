@@ -8895,3 +8895,11 @@ body:has(#homePage.is-active) .pick-home-ad-slot.pick-coupang-ad-slot {
 html.is-mobile-device .partner-site .mobile-flow-nav {
   grid-template-columns: minmax(0, 1fr);
 }
+
+html.is-mobile-device .partner-site .mobile-flow-nav.seller-mobile-nav {
+  padding-top: 10px;
+}
+
+html.is-mobile-device .partner-site .seller-mobile-home {
+  min-height: 64px;
+}
