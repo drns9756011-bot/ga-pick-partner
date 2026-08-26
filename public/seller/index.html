@@ -159,17 +159,17 @@
         display: block;
       }
     </style>
-  <link rel="stylesheet" href="/styles.css?v=20260821-single-line-headings-v6" />
+  <link rel="stylesheet" href="/styles.css?v=20260826-partner-logo-login-v2" />
     <script defer src="/privacy-policy.js?v=20260811-privacy-policy-v19"></script>
-  <script defer src="/app.js?v=20260820-seller-sort-v6"></script>
+  <script defer src="/app.js?v=20260826-partner-logo-login-v2"></script>
     <script defer src="/customer-wizard.js?v=20260819-phone-verification-v4"></script>
     <script defer src="/page-guide.js?v=20260731-mobile-modal-safe-area"></script>
   </head>
   <body class="partner-site">
     <header class="topbar">
-      <button class="brand nav-button" type="button" data-view="home" aria-label="픽견적 홈">
+      <a class="brand partner-brand-link" href="https://partner.ga-pick.com/" aria-label="픽견적 판매자 로그인">
         <img class="brand-logo-image" src="/assets/pickquote-official-logo-navy.png?v=20260813-navy-brand" alt="픽견적 가전 견적 비교 플랫폼" />
-      </button>
+      </a>
       <a
         class="header-ad-slot is-image-banner"
         href="https://open.kakao.com/o/sE77Bzfi"
@@ -191,16 +191,10 @@
           />
         </picture>
       </a>
-      <nav class="nav" aria-label="주요 메뉴">
-        <button type="button" data-view="customer">견적올리기</button>
-        <a class="pick-top-link" href="/brand">브랜드관</a>
-        <button type="button" data-view="lookup">내 견적 확인</button>
-        <button type="button" data-view="sellerLogin">판매자</button>
-      </nav>
     </header>
 
     <main>
-      <section class="page is-active" id="homePage" data-page="home">
+      <section class="page" id="homePage" data-page="home" aria-hidden="true">
         <section class="pick-app-home" aria-label="픽견적 홈">
           <div class="pick-home-shell">
             <section class="pick-trust-hero" aria-labelledby="pickHomeTitle">
@@ -462,7 +456,6 @@
 
       <section class="page seller-login-page" id="sellerLoginPage" data-page="sellerLogin">
         <div class="page-head">
-          <button class="back-btn" type="button" data-view="home">← 첫 화면</button>
           <p class="eyebrow">판매자 로그인</p>
           <h2>판매자 등록 승인 계정으로 로그인하세요.</h2>
           <p>
@@ -514,7 +507,6 @@
 
       <section class="page seller-page" id="sellerPage" data-page="seller">
         <div class="page-head">
-          <button class="back-btn" type="button" data-view="home">← 첫 화면</button>
           <p class="eyebrow">판매자 페이지</p>
           <h2>고객님이 올린 견적 내용과 사진을 확인하고 제안하세요.</h2>
           <p>
@@ -654,7 +646,6 @@
 
       <section class="page seller-register-page" id="sellerRegisterPage" data-page="sellerRegister">
         <div class="page-head">
-          <button class="back-btn" type="button" data-view="home">← 첫 화면</button>
           <p class="eyebrow">판매자 등록</p>
           <h2>판매자로 등록할 지점 정보를 입력해주세요.</h2>
           <p>
@@ -833,14 +824,6 @@
         </div>
         <button class="footer-register-btn" type="button" data-view="sellerRegister">판매자 등록</button>
       </div>
-      <nav class="footer-seo-links" aria-label="픽견적 주요 링크">
-        <a href="https://ga-pick.com/" data-view="home">픽견적 홈</a>
-        <a href="https://ga-pick.com/quote" data-view="customer">가전 견적 올리기</a>
-        <a href="https://ga-pick.com/brand">브랜드관</a>
-        <a href="https://ga-pick.com/my-quote" data-view="lookup">내 견적 확인</a>
-        <a href="https://partner.ga-pick.com/" data-view="sellerLogin">판매자 페이지</a>
-        <a href="https://partner.ga-pick.com/register" data-view="sellerRegister">판매자 등록</a>
-      </nav>
       <div class="footer-company">
         <strong>픽브릿지</strong>
         <p>

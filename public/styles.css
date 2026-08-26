@@ -8903,3 +8903,13 @@ html.is-mobile-device .partner-site .mobile-flow-nav.seller-mobile-nav {
 html.is-mobile-device .partner-site .seller-mobile-home {
   min-height: 64px;
 }
+
+/* partner.ga-pick.com is seller-only: customer pages and customer promotions never render. */
+.partner-site #homePage,
+.partner-site #customerPage,
+.partner-site #lookupPage,
+.partner-site .header-ad-slot,
+.partner-site .footer,
+.partner-site .kakao-floating-btn {
+  display: none !important;
+}

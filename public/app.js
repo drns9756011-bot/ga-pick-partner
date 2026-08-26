@@ -44,8 +44,8 @@ const navButtons = document.querySelectorAll("[data-view]");
 document.documentElement.classList.add("app-ready");
 const ROUTES_BY_VIEW = {
   home: "/",
-  customer: "/quote",
-  lookup: "/my-quote",
+  customer: "/",
+  lookup: "/",
   sellerLogin: "/",
   seller: "/",
   sellerRegister: "/register",
@@ -1474,6 +1474,10 @@ function setView(view, options = {}) {
   const shouldUpdatePath = options.updatePath !== false;
   const shouldScroll = options.scroll !== false;
   const shouldReplacePath = options.replacePath === true;
+  // The partner deployment is seller-only. Customer views must never render here.
+  if (!["seller", "sellerLogin", "sellerRegister"].includes(view)) {
+    view = activeSellerId ? "seller" : "sellerLogin";
+  }
   if (view === "seller" && !activeSellerId) {
     view = "sellerLogin";
     setSellerLoginMessage("판매자 페이지는 로그인 후 이용할 수 있습니다.", "error");

@@ -24,7 +24,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = decodeURIComponent(url.pathname).replace(/\/+$/, "") || "/";
-    const routeVersion = "20260821-partner-web-split-v1";
+    const routeVersion = "20260826-partner-logo-login-v2";
 
     if (path === "/robots.txt") {
       return new Response("User-agent: *\nDisallow: /\n", {
