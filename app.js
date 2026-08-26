@@ -46,14 +46,18 @@ const ROUTES_BY_VIEW = {
   home: "/",
   customer: "/quote",
   lookup: "/my-quote",
-  sellerLogin: "/",
-  seller: "/",
-  sellerRegister: "/register",
+  sellerLogin: "/seller",
+  seller: "/seller",
+  sellerRegister: "/seller/register",
 };
 const VIEWS_BY_ROUTE = {
-  "/": "sellerLogin",
-  "/register": "sellerRegister",
-  "/register/": "sellerRegister",
+  "/": "home",
+  "/quote": "customer",
+  "/quote/": "customer",
+  "/my-quote": "lookup",
+  "/my-quote/": "lookup",
+  "/seller/register": "sellerRegister",
+  "/seller/register/": "sellerRegister",
 };
 const requestForm = document.querySelector("#requestForm");
 const requestFormMessage = document.querySelector("#requestFormMessage");
@@ -1393,12 +1397,30 @@ function normalizeAppPath(pathname) {
 
 function getViewFromPath(pathname) {
   const path = normalizeAppPath(pathname);
-  if (path === "/") return activeSellerId ? "seller" : "sellerLogin";
-  return VIEWS_BY_ROUTE[path] || "sellerLogin";
+  if (path === "/seller") return activeSellerId ? "seller" : "sellerLogin";
+  return VIEWS_BY_ROUTE[path] || "home";
 }
 
 function getPathForView(view) {
   return ROUTES_BY_VIEW[view] || "/";
+}
+
+function isSellerPortalView(view) {
+  return view === "seller" || view === "sellerLogin" || view === "sellerRegister";
+}
+
+function applySellerPortalShell(view) {
+  const isSellerPortal = isSellerPortalView(view);
+  document.body.classList.toggle("is-seller-portal", isSellerPortal);
+
+  const brandButton = document.querySelector(".topbar .brand");
+  if (!brandButton) return;
+
+  brandButton.dataset.view = isSellerPortal ? "seller" : "home";
+  brandButton.setAttribute(
+    "aria-label",
+    isSellerPortal ? "픽견적 판매자 페이지" : "픽견적 홈"
+  );
 }
 
 function isMobileSellerLayout() {
@@ -1480,6 +1502,7 @@ function setView(view, options = {}) {
   }
 
   document.documentElement.dataset.initialView = view;
+  applySellerPortalShell(view);
   if (view !== "seller") {
     closeSellerMobileDetail({ scroll: false });
   }
@@ -2883,7 +2906,7 @@ window.addEventListener("popstate", (event) => {
     return;
   }
 
-  if (isMobileSellerLayout() && normalizeAppPath(window.location.pathname) === "/") {
+  if (isMobileSellerLayout() && normalizeAppPath(window.location.pathname) === "/seller") {
     if (event.state?.sellerMobileDetail) {
       setSellerMobileDetailOpen(true);
     } else {
@@ -4039,9 +4062,9 @@ function trackPublicPageVisit() {
 async function bootApplication() {
   trackPublicPageVisit();
   const initialPath = normalizeAppPath(window.location.pathname);
-  const isSellerPath = initialPath === "/";
-  const isSellerRegisterPath = initialPath === "/register";
-  const isHomePath = false;
+  const isSellerPath = initialPath === "/seller";
+  const isSellerRegisterPath = initialPath === "/seller/register";
+  const isHomePath = initialPath === "/";
 
   if (canUseApiServer()) {
     if (isHomePath) {
