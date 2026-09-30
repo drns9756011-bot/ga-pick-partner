@@ -2843,8 +2843,8 @@ select {
 }
 
 .seller-compare-card.is-highlight {
-  background: #123c36;
-  border-color: #123c36;
+  background: var(--primary);
+  border-color: var(--primary);
   color: #fff;
 }
 
@@ -2852,7 +2852,7 @@ select {
   width: fit-content;
   padding: 6px 10px;
   border-radius: 8px;
-  background: #eef4f2;
+  background: #f0f4f8;
   color: var(--primary);
   font-size: 13px;
   font-weight: 800;
