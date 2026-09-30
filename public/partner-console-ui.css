@@ -1,0 +1,120 @@
+/* Partner console: scoped to seller routes; no customer or API behavior changes. */
+@font-face {
+  font-family: "Partner SUIT";
+  src: url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+body.partner-site {
+  --primary: #173e65;
+  --ink: #202b36;
+  --muted: #667482;
+  --line: #dfe5eb;
+  font-family: "Partner SUIT", "Malgun Gothic", sans-serif;
+  background: #fff;
+  color: var(--ink);
+}
+.partner-site :is(button, input, textarea, select) { font-family: inherit; letter-spacing: 0; }
+.partner-site .topbar { min-height: 68px; padding: 12px 28px; background: #fff; box-shadow: none; gap: 16px; }
+.partner-site .topbar .brand { padding: 0; min-height: 0; }
+.partner-site .topbar .brand-logo-image { width: 116px; height: 36px; object-fit: contain; }
+.partner-site :is(#sellerLoginPage, #sellerPage) * { letter-spacing: 0; }
+.partner-site :is(#sellerLoginPage, #sellerPage) :is(button, a, input, textarea, select):focus-visible {
+  outline: 3px solid #547baf; outline-offset: 3px;
+}
+.partner-site #sellerLoginPage { background: #fff; min-height: calc(100dvh - 68px); padding: 64px 24px 100px; }
+.partner-site #sellerLoginPage .page-head { max-width: 400px; padding: 0; margin: 0 auto 32px; text-align: left; border: 0; }
+.partner-site #sellerLoginPage .eyebrow { color: #173e65; font-size: 13px; font-weight: 700; margin: 0 0 12px; }
+.partner-site #sellerLoginPage .page-head h2 { margin: 0 0 12px; font-size: 32px; line-height: 1.35; font-weight: 800; }
+.partner-site #sellerLoginPage .page-head p:not(.eyebrow) { margin: 0; color: #667482; font-size: 16px; line-height: 1.6; }
+.partner-site #sellerLoginPage .login-layout { display: block; max-width: 400px; padding: 0; margin: auto; }
+.partner-site #sellerLoginForm { display: grid; width: 100%; gap: 20px; padding: 0; border: 0; background: transparent; box-shadow: none; border-radius: 0; }
+.partner-site #sellerLoginForm label { display: grid; gap: 9px; font-size: 14px; font-weight: 700; color: #364452; }
+.partner-site #sellerLoginForm input { width: 100%; height: 52px; padding: 12px 15px; border: 1px solid #d5dde5; background: #fff; border-radius: 6px; font-size: 16px; color: #202b36; }
+.partner-site #sellerLoginForm input::placeholder { color: #89939e; }
+.partner-site #sellerLoginForm button { min-height: 50px; border-radius: 6px; font-size: 16px; font-weight: 700; margin: 0; }
+.partner-site #sellerLoginForm .primary-btn { background: #173e65; border-color: #173e65; box-shadow: none; }
+.partner-site #sellerLoginForm .primary-btn:hover { background: #10304f; }
+.partner-site #sellerLoginForm .secondary-btn { min-height: 36px; padding: 0; color: #667482; background: transparent; border: 0; font-size: 14px; box-shadow: none; }
+.partner-site #sellerLoginMessage:empty { display: none; }
+.partner-join { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 12px; padding-top: 24px; margin-top: 24px; border-top: 1px solid #e5e9ee; font-size: 14px; color: #667482; }
+.partner-join button { background: none; border: 0; padding: 8px 0; font-weight: 700; color: #173e65; cursor: pointer; }
+.partner-site #sellerPage { background: #fff; min-height: calc(100dvh - 68px); }
+.partner-site #sellerPage.is-active { display: grid; grid-template-columns: 208px minmax(0, 1fr); grid-template-rows: auto 1fr; align-items: start; }
+.partner-site #sellerPage > .page-head { grid-column: 2; grid-row: 1; padding: 30px 32px 24px; margin: 0; max-width: none; text-align: left; border-bottom: 1px solid #e5e9ee; }
+.partner-site #sellerPage > .page-head .eyebrow { margin: 0 0 8px; font-size: 12px; color: #74808c; }
+.partner-site #sellerPage > .page-head h2 { margin: 0; font-size: 27px; font-weight: 800; line-height: 1.4; }
+.partner-site #sellerPage .seller-workspace-tools { margin-top: 18px; }
+.partner-site #sellerPage > .seller-tabs { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; flex-wrap: nowrap; gap: 6px; align-items: stretch; align-self: stretch; margin: 0; padding: 28px 14px; background: #f7f8fa; border: 0; border-right: 1px solid #e5e9ee; overflow: visible; }
+.partner-site #sellerPage .seller-tabs button { display: flex; align-items: center; gap: 8px; min-height: 46px; padding: 12px 15px; border: 0; border-radius: 6px; background: transparent; color: #5d6a77; text-align: left; white-space: normal; font-size: 14px; font-weight: 650; box-shadow: none; }
+.partner-site #sellerPage .seller-tabs button:hover { background: #edf0f4; }
+.partner-site #sellerPage .seller-tabs button.is-active { background: #e7edf5; color: #173e65; font-weight: 800; box-shadow: inset 3px 0 #173e65; }
+.partner-site #sellerPage .seller-page-layout { grid-column: 2; grid-row: 2; display: grid; grid-template-columns: minmax(260px, 320px) minmax(0, 1fr); align-items: start; gap: 28px; width: 100%; max-width: none; margin: 0; padding: 24px 32px 100px; background: #fff; }
+.partner-site #sellerPage :is(.seller-list-column, .seller-detail) { min-width: 0; }
+.partner-site #sellerPage .seller-filter-host { padding: 0; margin: 0 0 16px; background: none; border: 0; border-radius: 0; box-shadow: none; }
+.partner-site #sellerPage .seller-filter-bar { position: static; gap: 14px; padding: 0 0 18px; margin: 0; border: 0; border-bottom: 1px solid #e5e9ee; background: transparent; border-radius: 0; backdrop-filter: none; }
+.partner-site #sellerPage .seller-filter-group { display: grid; gap: 8px; padding: 0; margin: 0; border: 0; }
+.partner-site #sellerPage .seller-filter-group > span { font-size: 12px; font-weight: 700; color: #74808c; }
+.partner-site #sellerPage .seller-filter-group > div { display: flex; gap: 6px; flex-wrap: wrap; }
+.partner-site #sellerPage .seller-filter-group button { min-height: 34px; padding: 6px 10px; border-radius: 4px; font-size: 12px; font-weight: 650; background: #fff; border-color: #e0e5eb; }
+.partner-site #sellerPage .seller-filter-group button.is-active { background: #edf2f8; border-color: #b7c9dc; color: #173e65; }
+.partner-site #sellerPage .request-list { display: grid; gap: 8px; max-height: none; padding: 0; border: 0; background: transparent; box-shadow: none; overflow: visible; }
+.partner-site #sellerPage .request-item { display: flex; flex-wrap: wrap; align-content: start; gap: 5px 12px; padding: 18px; border: 1px solid #e0e5eb; border-radius: 6px; background: #fff; box-shadow: none; text-align: left; }
+.partner-site #sellerPage .request-item::after { content: none; }
+.partner-site #sellerPage .request-item strong { width: 100%; color: #202b36; font-size: 16px; line-height: 1.55; overflow-wrap: anywhere; }
+.partner-site #sellerPage .request-item > span { color: #667482; font-size: 12px; line-height: 1.6; }
+.partner-site #sellerPage .request-item:is(:hover, .is-active) { border-color: #6884a3; background: #f4f7fb; }
+.partner-site #sellerPage .request-item.is-active { box-shadow: inset 3px 0 #173e65; }
+.partner-site #sellerPage .seller-detail { display: block; padding-left: 28px; border-left: 1px solid #e5e9ee; }
+.partner-site #sellerPage .seller-quote-card { padding: 0; margin: 0 0 28px; background: transparent; border: 0; box-shadow: none; border-radius: 0; }
+.partner-site #sellerPage .board-label { position: static; display: block; width: auto; padding: 0 0 14px; margin: 0; color: #173e65; font-size: 14px; background: none; border: 0; box-shadow: none; transform: none; border-radius: 0; }
+.partner-site #sellerPage .seller-image { padding: 12px; min-height: 120px; max-height: 280px; background: #f7f8fa; border: 1px solid #e5e9ee; border-radius: 6px; overflow: auto; }
+.partner-site #sellerPage .seller-image img { max-height: 240px; object-fit: contain; }
+.partner-site #sellerPage .preview-details { padding: 20px 0 0; }
+.partner-site #sellerPage .preview-details h3 { font-size: 21px; line-height: 1.5; margin: 12px 0; }
+.partner-site #sellerPage .seller-summary-grid { gap: 0 20px; }
+.partner-site #sellerPage .seller-summary-grid div { padding: 12px 0; background: transparent; border: 0; border-bottom: 1px solid #e5e9ee; border-radius: 0; }
+.partner-site #sellerPage .seller-summary-grid span { font-size: 12px; font-weight: 500; color: #74808c; }
+.partner-site #sellerPage .seller-summary-grid strong { font-size: 14px; font-weight: 650; }
+.partner-site #sellerPage .bid-form { border: 0; border-top: 1px solid #e5e9ee; border-radius: 0; padding: 24px 0 0; margin: 0; background: none; box-shadow: none; gap: 18px; }
+.partner-site #sellerPage :is(.bid-form, #regionChangeForm) label { font-size: 13px; font-weight: 700; }
+.partner-site #sellerPage :is(input, textarea, select) { font-size: 16px; border-radius: 6px; background: #fff; border-color: #d5dde5; }
+.partner-site #sellerPage input[readonly] { background: #f7f8fa; color: #667482; }
+.partner-site #sellerPage .primary-btn { border-radius: 6px; background: #173e65; border-color: #173e65; box-shadow: none; min-height: 48px; font-size: 15px; }
+.partner-site #sellerPage :is(.sale-complete-panel, .seller-request-note, .without-quote-items) { background: #f3f6fa; border-color: #dfe5eb; border-radius: 6px; }
+.partner-site #sellerPage:has([data-seller-tab="chat"].is-active) .seller-page-layout { grid-template-columns: minmax(0, 1fr); }
+.partner-site #sellerPage:has([data-seller-tab="chat"].is-active) .seller-detail { display: none; }
+.partner-site #sellerPage .seller-chat-room { padding: 20px; border-radius: 6px; box-shadow: none; }
+.partner-site #sellerPage .seller-chat-room small { margin-top: 6px; font-size: 14px; }
+.partner-site #sellerRegionPanel { grid-column: 2; grid-row: 2; width: 100%; max-width: 960px; padding: 28px 32px 100px; margin: 0; border: 0; background: transparent; box-shadow: none; }
+.partner-site #sellerRegionPanel .section-heading { padding: 0; }
+.partner-site #sellerRegionPanel h2 { font-size: 21px; line-height: 1.5; }
+.partner-site #sellerRegionPanel #regionChangeForm { padding: 24px 0; border: 0; border-radius: 0; box-shadow: none; }
+@media (max-width: 1100px) and (min-width: 761px) {
+  .partner-site #sellerPage.is-active { grid-template-columns: 172px minmax(0, 1fr); }
+  .partner-site #sellerPage .seller-page-layout { grid-template-columns: minmax(220px, 270px) minmax(0, 1fr); padding: 20px; gap: 20px; }
+  .partner-site #sellerPage .seller-detail { padding-left: 20px; }
+  .partner-site #sellerPage .form-row { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .partner-site .topbar { min-height: 60px; padding: calc(12px + env(safe-area-inset-top)) 20px 12px; }
+  .partner-site .topbar .brand-logo-image { width: 104px; height: 32px; }
+  .partner-site #sellerLoginPage { min-height: calc(100dvh - 60px); padding: 40px 24px calc(100px + env(safe-area-inset-bottom)); }
+  .partner-site #sellerLoginPage .page-head h2 { font-size: 28px; }
+  .partner-site #sellerPage.is-active { display: block; }
+  .partner-site #sellerPage > .page-head { padding: 24px 20px 20px; }
+  .partner-site #sellerPage > .page-head h2 { font-size: 24px; }
+  .partner-site #sellerPage > .seller-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 12px 16px; border-right: 0; border-bottom: 1px solid #e5e9ee; }
+  .partner-site #sellerPage .seller-tabs button { padding: 10px 4px; min-height: 44px; justify-content: center; gap: 3px; text-align: center; font-size: 12px; line-height: 1.5; }
+  .partner-site #sellerPage .seller-tabs button.is-active { box-shadow: none; }
+  .partner-site #sellerPage .seller-page-layout { display: block; padding: 20px 20px calc(100px + env(safe-area-inset-bottom)); }
+  .partner-site #sellerPage .seller-detail { display: none; padding: 0; border: 0; }
+  .seller-mobile-detail-open .partner-site #sellerPage .seller-detail { display: block; }
+  .seller-mobile-detail-open .partner-site #sellerPage .seller-list-column { display: none; }
+  .partner-site #sellerPage:has([data-seller-tab="chat"].is-active) .seller-list-column { display: block; }
+  .partner-site #sellerPage:has([data-seller-tab="chat"].is-active) .seller-detail { display: none; }
+  .partner-site #sellerPage .seller-mobile-list-back { margin: 0 0 20px; border-radius: 6px; min-height: 44px; }
+  .partner-site #sellerPage .form-row { grid-template-columns: minmax(0, 1fr); }
+  .partner-site #sellerRegionPanel { padding: 24px 20px calc(100px + env(safe-area-inset-bottom)); }
+  .partner-site #sellerRegionPanel h2 { font-size: 19px; }
+}

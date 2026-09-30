@@ -9,9 +9,6 @@
     <meta name="color-scheme" content="light" />
     <meta name="supported-color-schemes" content="light" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<!-- Google AdSense site ownership / ads script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9286156779528114"
-         crossorigin="anonymous"></script>
     <title>픽견적 파트너 | 판매자 전용</title>
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <link rel="canonical" href="https://partner.ga-pick.com/" />
@@ -163,6 +160,7 @@
   <link rel="stylesheet" href="/seller-register-ui.css?v=20260930" />
   <link rel="stylesheet" href="/seller-image-gallery.css?v=20260930" />
   <script defer src="/seller-image-gallery.js?v=20260930"></script>
+  <link rel="stylesheet" href="/partner-console-ui.css?v=20260930-1" />
     <script defer src="/privacy-policy.js?v=20260811-privacy-policy-v19"></script>
   <script defer src="/app.js?v=20260930-partner-chat-fix"></script>
     <script defer src="/customer-wizard.js?v=20260819-phone-verification-v4"></script>
@@ -173,27 +171,7 @@
       <a class="brand partner-brand-link" href="https://partner.ga-pick.com/" aria-label="픽견적 판매자 로그인">
         <img class="brand-logo-image" src="/assets/pickquote-official-logo-navy.png?v=20260813-navy-brand" alt="픽견적 가전 견적 비교 플랫폼" />
       </a>
-      <a
-        class="header-ad-slot is-image-banner"
-        href="https://open.kakao.com/o/sE77Bzfi"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="전자랜드 경산점 리뉴얼 오픈, 9월 4일 OPEN, 온라인최저가 참고형 매장 안내 오픈채팅으로 이동"
-      >
-        <picture class="header-ad-picture">
-          <source
-            media="(max-width: 900px)"
-            srcset="/assets/banner1-gyeongsan-mobile-640x80.png?v=20260805-mobile-picture-v2"
-          />
-          <img
-            src="/assets/banner1-gyeongsan-pc-1520x96.png?v=20260805-mobile-picture-v2"
-            alt="전자랜드 경산점 리뉴얼 오픈, 9월 4일 OPEN"
-            width="1520"
-            height="96"
-            decoding="async"
-          />
-        </picture>
-      </a>
+
     </header>
 
     <main>
@@ -459,63 +437,33 @@
 
       <section class="page seller-login-page" id="sellerLoginPage" data-page="sellerLogin">
         <div class="page-head">
-          <p class="eyebrow">판매자 로그인</p>
-          <h2>판매자 등록 승인 계정으로 로그인하세요.</h2>
-          <p>
-            고객님 견적은 판매자로 등록된 사람만 확인할 수 있습니다. 고객님은 로그인 없이
-            견적 등록과 내 견적 확인을 이용합니다.
-          </p>
+          <p class="eyebrow">픽견적 파트너</p>
+          <h2>판매자 로그인</h2>
+          <p>오늘의 견적과 상담을 확인하세요.</p>
         </div>
-
         <div class="login-layout">
           <form class="request-form login-form" id="sellerLoginForm">
-            <label>
-              아이디
-              <input type="text" name="loginId" placeholder="판매자 아이디" required />
+            <label>아이디
+              <input type="text" name="loginId" placeholder="판매자 아이디" autocomplete="username" autocapitalize="none" spellcheck="false" required />
             </label>
-            <label>
-              비밀번호
-              <input type="password" name="loginPassword" placeholder="비밀번호" required />
+            <label>비밀번호
+              <input type="password" name="loginPassword" placeholder="비밀번호" autocomplete="current-password" required />
             </label>
-            <button class="primary-btn full" type="submit">판매자 로그인</button>
-            <button class="secondary-btn full" id="openSellerAccountModal" type="button">판매자 계정 찾기</button>
+            <button class="primary-btn full" type="submit">로그인</button>
+            <button class="secondary-btn full" id="openSellerAccountModal" type="button">아이디 · 비밀번호 찾기</button>
             <p class="form-message" id="sellerLoginMessage" role="alert"></p>
           </form>
-
-          <aside class="seller-benefit-panel">
-            <p class="eyebrow">판매자 유입 장점</p>
-            <h2>광고 클릭보다 구매 의향이 또렷한 고객님을 먼저 확인하세요.</h2>
-            <p>
-              메타 광고나 블로그는 노출 이후 상담까지 시간이 걸릴 수 있지만, 픽견적은 고객님이
-              이미 받은 견적서와 필요한 품목을 올린 뒤 판매자 제안을 기다리는 구조입니다.
-            </p>
-            <div class="seller-benefit-grid">
-              <div>
-                <strong>견적서 보유 고객님</strong>
-                <span>품목, 기존 금액, 설치 지역을 보고 바로 제안할 수 있습니다.</span>
-              </div>
-              <div>
-                <strong>지역 기반 상담</strong>
-                <span>지점 지역과 고객님 설치 지역을 기준으로 응답 대상을 판단합니다.</span>
-              </div>
-              <div>
-                <strong>선택 후 연락</strong>
-                <span>고객님이 제안을 선택한 뒤 연락처가 공개되어 불필요한 연락 부담을 줄입니다.</span>
-              </div>
-            </div>
-            <button class="secondary-btn" type="button" data-view="sellerRegister">판매자 등록 요청</button>
-          </aside>
+          <div class="partner-join">
+            <span>아직 파트너가 아니신가요?</span>
+            <button type="button" data-view="sellerRegister">판매자 등록</button>
+          </div>
         </div>
       </section>
 
       <section class="page seller-page" id="sellerPage" data-page="seller">
         <div class="page-head">
-          <p class="eyebrow">판매자 페이지</p>
-          <h2>고객님이 올린 견적 내용과 사진을 확인하고 제안하세요.</h2>
-          <p>
-            판매자는 접수된 견적 목록을 선택한 뒤 고객님의 견적서 이미지, 품목, 금액,
-            설치 지역, 요청사항을 보고 제안 금액과 조건을 입력합니다.
-          </p>
+          <p class="eyebrow">픽견적 파트너</p>
+          <h2>견적 관리</h2>
         </div>
 
         <div class="seller-tabs" aria-label="판매자 견적 분류">
@@ -785,12 +733,6 @@
 
     </main>
 
-    <nav class="mobile-flow-nav seller-mobile-nav" aria-label="판매자 하단 메뉴">
-      <a class="mobile-flow-home seller-mobile-home is-current" href="/login" data-view="sellerLogin" aria-current="page" aria-label="판매자 홈">
-        <span class="mobile-flow-logo" aria-hidden="true"><img src="/assets/pickquote-official-symbol-navy.png?v=20260813-symbol-cutout" alt="" /></span>
-        <span>홈</span>
-      </a>
-    </nav>
 
     <footer class="footer">
       <div class="footer-top">
