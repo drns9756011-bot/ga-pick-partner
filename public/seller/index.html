@@ -160,6 +160,7 @@
       }
     </style>
   <link rel="stylesheet" href="/styles.css?v=20260826-partner-logo-login-v2" />
+  <link rel="stylesheet" href="/seller-register-ui.css?v=20260930" />
     <script defer src="/privacy-policy.js?v=20260811-privacy-policy-v19"></script>
   <script defer src="/app.js?v=20260930-partner-chat-fix"></script>
     <script defer src="/customer-wizard.js?v=20260819-phone-verification-v4"></script>
@@ -646,43 +647,15 @@
       </section>
 
       <section class="page seller-register-page" id="sellerRegisterPage" data-page="sellerRegister">
-        <div class="page-head">
-          <p class="eyebrow">판매자 등록</p>
-          <h2>판매자로 등록할 지점 정보를 입력해주세요.</h2>
-          <p>
-            지점 명함 이미지는 필수입니다. 등록 신청 내용은 운영자 확인 후 승인된 판매자만
-            고객님 견적에 제안할 수 있도록 설계합니다.
-          </p>
-        </div>
-
-        <section class="seller-acquisition-section" aria-label="판매자 등록 장점">
-          <div class="section-heading">
-            <p class="eyebrow">광고·블로그와 다른 점</p>
-            <h2>문의가 오기만 기다리는 방식보다, 견적을 올린 고객님에게 직접 제안하세요.</h2>
-            <p>
-              광고 운영과 블로그 노출은 여전히 도움이 될 수 있습니다. 다만 픽견적은 고객님이
-              비교 의사를 먼저 남긴 뒤 판매자 제안을 받는 흐름이라 상담 준비 시간이 짧아집니다.
-            </p>
-          </div>
-
-          <div class="seller-acquisition-grid">
-            <article class="seller-compare-card">
-              <span>메타 광고·블로그</span>
-              <h3>노출 이후 문의를 기다리는 구조</h3>
-              <p>클릭과 조회는 만들 수 있지만 실제 구매 품목, 기존 견적, 설치 지역을 다시 확인해야 합니다.</p>
-            </article>
-            <article class="seller-compare-card is-highlight">
-              <span>픽견적 판매자</span>
-              <h3>견적서가 있는 고객님에게 제안</h3>
-              <p>고객님이 올린 견적 이미지와 요청 조건을 보고 금액, 혜택, 배송 조건을 바로 비교 제안합니다.</p>
-            </article>
-            <article class="seller-compare-card">
-              <span>상담 효율</span>
-              <h3>선택받은 고객님 중심으로 연락</h3>
-              <p>고객님 연락처는 제안 선택 후 공개되므로, 관심이 확인된 고객님과 더 집중해서 상담할 수 있습니다.</p>
-            </article>
-          </div>
-        </section>
+        <header class="partner-register-heading">
+          <p>픽견적 파트너</p>
+          <div><h1>판매자 등록</h1><a href="/login" data-view="sellerLogin">이미 계정이 있나요? 로그인</a></div>
+          <ol class="partner-register-process" aria-label="판매자 등록 절차">
+            <li><span>01</span>등록 신청</li>
+            <li><span>02</span>지점 정보 확인</li>
+            <li><span>03</span>승인 후 제안 시작</li>
+          </ol>
+        </header>
 
         <div class="register-layout">
           <form class="request-form" id="sellerRegisterForm">
