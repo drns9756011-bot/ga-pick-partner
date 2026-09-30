@@ -8,6 +8,7 @@ let businessCardImage = "";
 let activeSellerId = "";
 let activeSellerTab = "all";
 let sellerChatRooms = [];
+let sellerChatRoomsError = "";
 let activeSellerBrandFilter = "all";
 let activeSellerRegionFilter = "all";
 let activeSellerSort = "deadline";
@@ -1149,7 +1150,12 @@ async function syncSellerDashboardData(options = {}) {
 async function loadSellerChatRooms() {
   if (!activeSellerId || !canUseApiServer()) return;
   const result = await apiJson(`/api/anonymous-consultations?sellerId=${encodeURIComponent(activeSellerId)}`, { showLoading: false, silent: true });
-  if (!result?.ok || !Array.isArray(result.rooms)) return;
+  if (!result?.ok || !Array.isArray(result.rooms)) {
+    sellerChatRoomsError = "채팅방을 불러오지 못했습니다. 잠시 후 다시 확인해 주세요.";
+    if (activeSellerTab === 'chat') renderRequests();
+    return;
+  }
+  sellerChatRoomsError = "";
   sellerChatRooms = result.rooms;
   const count = sellerChatRooms.reduce((sum, room) => sum + Number(room.customerMessageCount || 0), 0);
   const badge = document.querySelector('#sellerChatTabBadge');
@@ -1158,6 +1164,10 @@ async function loadSellerChatRooms() {
 }
 
 function renderSellerChatRooms() {
+  if (sellerChatRoomsError) {
+    requestList.innerHTML = `<div class="empty-state compact-empty"><strong>${escapeHTML(sellerChatRoomsError)}</strong><button class="secondary-btn" type="button" data-retry-seller-chat>다시 불러오기</button></div>`;
+    return;
+  }
   requestList.innerHTML = sellerChatRooms.length ? sellerChatRooms.map((room) => `
     <button class="seller-chat-room" type="button" data-chat-room-id="${escapeHTML(room.id)}" data-request-id="${escapeHTML(room.quoteId)}" data-bid-id="${escapeHTML(room.bidId)}">
       <span class="seller-chat-room-top"><strong>${escapeHTML(room.items)}</strong>${Number(room.customerMessageCount || 0) ? `<b class="anonymous-chat-badge">${room.customerMessageCount > 99 ? '99+' : room.customerMessageCount}</b>` : ''}</span>
@@ -2908,6 +2918,10 @@ sellerTabs.forEach((tab) => {
     closeSellerMobileDetail();
     setBidFormMessage("");
     renderRequests();
+    if (activeSellerTab === "chat") {
+      loadSellerChatRooms();
+      return;
+    }
     renderSelectedRequest();
   });
 });
@@ -3411,12 +3425,16 @@ lookupResults.addEventListener("submit", async (event) => {
 });
 
 sellerQuoteWorkspace.addEventListener("click", async (event) => {
+  if (event.target.closest('[data-retry-seller-chat]')) {
+    await loadSellerChatRooms();
+    return;
+  }
   const chatRoom = event.target.closest('.seller-chat-room');
   if (chatRoom) {
     const room = sellerChatRooms.find((item) => String(item.id) === String(chatRoom.dataset.chatRoomId));
     const request = requests.find((item) => sameId(item.id, chatRoom.dataset.requestId));
     const bid = bids.find((item) => sameId(item.id, chatRoom.dataset.bidId));
-    if (room && request && bid) await openAnonymousConsultation(request, bid, 'seller');
+    if (room) await openAnonymousConsultation(request || { id: room.quoteId }, bid || { id: room.bidId }, 'seller');
     return;
   }
   const anonymousButton = event.target.closest(".seller-anonymous-consult-btn");
@@ -3906,6 +3924,7 @@ function renderRequests() {
 }
 
 function renderSelectedRequest() {
+  if (activeSellerTab === "chat") return;
   const request = getSelectedRequest();
   if (!request) {
     selectedStatus.textContent = "선택 대기";
