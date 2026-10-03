@@ -8909,7 +8909,6 @@ html.is-mobile-device .partner-site .seller-mobile-home {
 .partner-site #customerPage,
 .partner-site #lookupPage,
 .partner-site .header-ad-slot,
-.partner-site .footer,
-.partner-site .kakao-floating-btn {
+.partner-site .footer {
   display: none !important;
 }
