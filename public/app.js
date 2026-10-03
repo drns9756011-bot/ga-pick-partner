@@ -7,6 +7,7 @@ let uploadedImages = [];
 let businessCardImage = "";
 let activeSellerId = "";
 let activeSellerTab = "all";
+let sellerDashboardLoading = false;
 let sellerChatRooms = [];
 let sellerChatRoomsError = "";
 let activeSellerBrandFilter = "all";
@@ -1049,8 +1050,9 @@ async function syncCustomerQuotesFromServer(options = {}) {
     loadingText: "서버에 저장된 견적 정보를 확인하고 있습니다.",
   });
 
-  if (!result?.ok || !Array.isArray(result.rows)) return;
+  if (!result?.ok || !Array.isArray(result.rows)) return false;
   replaceRequests(result.rows);
+  return true;
 }
 
 function replaceBids(rows) {
@@ -1116,8 +1118,17 @@ async function syncSellerDashboardData(options = {}) {
   }
 
   try {
+    sellerDashboardLoading = true;
+    if (activeSellerId) renderRequests();
+    const quotesTask = syncCustomerQuotesFromServer({ showLoading: false }).finally(() => {
+      sellerDashboardLoading = false;
+      if (activeSellerId) {
+        renderRequests();
+        renderSelectedRequest();
+      }
+    });
     const syncResults = await Promise.allSettled([
-      syncCustomerQuotesFromServer({ showLoading: false }),
+      quotesTask,
       syncBidsFromServer({ showLoading: false }),
       syncReviewsFromServer({ showLoading: false }),
       loadSellerChatRooms(),
@@ -3512,11 +3523,12 @@ sellerLoginForm.addEventListener("submit", async (event) => {
     if (bidForm.elements.managerName) bidForm.elements.managerName.value = account.manager || "";
     if (bidForm.elements.managerPhone) bidForm.elements.managerPhone.value = formatPhoneNumber(account.phone || "");
 
+    sellerDashboardLoading = true;
     setView("seller", { replacePath: true });
     hideServerLoading(true);
 
     try {
-      await syncSellerDashboardData({ showLoading: true });
+      await syncSellerDashboardData({ showLoading: false });
     } catch (error) {
       console.warn("로그인은 완료됐지만 판매자 데이터를 모두 불러오지 못했습니다.", error);
       setBidFormMessage("로그인은 완료되었습니다. 일부 정보를 불러오지 못한 경우 새로고침해주세요.", "error");
@@ -3639,15 +3651,15 @@ sellerRegisterForm.addEventListener("submit", async (event) => {
   const normalizedSellerPhone = normalizePhone(sellerPhone);
   const sellerMemo = formData.get("sellerMemo").trim() || "추가 메모 없음";
 
-  hydrateApprovedSellerAccounts();
+  if (!canUseApiServer()) hydrateApprovedSellerAccounts();
 
-  if (sellerAccounts.has(sellerId)) {
+  if (!canUseApiServer() && sellerAccounts.has(sellerId)) {
     sellerRegisterTitle.textContent = "이미 사용 중인 판매자 아이디입니다.";
     sellerRegisterMeta.textContent = "다른 아이디로 다시 신청해주세요.";
     return;
   }
 
-  if (registeredSellerPhones.has(normalizedSellerPhone)) {
+  if (!canUseApiServer() && registeredSellerPhones.has(normalizedSellerPhone)) {
     sellerRegisterTitle.textContent = "이미 등록된 판매자 연락처입니다.";
     sellerRegisterMeta.textContent = "다른 연락처를 입력하거나 계정 찾기를 이용해주세요.";
     return;
@@ -3854,6 +3866,10 @@ function renderRequests() {
   });
 
   if (!filteredRequests.length) {
+    if (sellerDashboardLoading) {
+      requestList.innerHTML = '<div class="empty-state compact-empty"><strong>견적을 불러오는 중입니다.</strong></div>';
+      return;
+    }
     const emptyLabel =
         activeSellerTab === "proposed"
           ? "선택 대기 중인 제안 견적이 없습니다."
@@ -4063,35 +4079,10 @@ async function bootApplication() {
   trackPublicPageVisit();
   const initialPath = normalizeAppPath(window.location.pathname);
   const isSellerPath = initialPath === "/";
-  const isSellerRegisterPath = initialPath === "/register";
-  const isHomePath = false;
-
-  if (canUseApiServer()) {
-    if (isHomePath) {
-      await Promise.all([
-        syncCustomerQuotesFromServer({ showLoading: false }),
-        syncBidsFromServer({ showLoading: false }),
-        syncReviewsFromServer({ showLoading: false }),
-      ]);
-    }
-
-    if (isSellerPath) {
-      showServerLoading("판매자 페이지를 준비 중입니다.", "계정과 견적 데이터를 불러오고 있습니다.");
-      await syncApprovedSellersFromServer({ showLoading: false });
-      restoreActiveSellerSession();
-    } else if (isSellerRegisterPath) {
-      await syncApprovedSellersFromServer({ showLoading: false });
-    }
-
-    try {
-      if (isSellerPath && activeSellerId) {
-        await syncSellerDashboardData({ showLoading: false });
-      }
-    } finally {
-      if (isSellerPath) {
-        hideServerLoading(true);
-      }
-    }
+  if (isSellerPath) {
+    hydrateApprovedSellerAccounts();
+    restoreActiveSellerSession();
+    sellerDashboardLoading = Boolean(activeSellerId);
   }
 
   applyViewFromCurrentPath({ replacePath: true });
@@ -4099,6 +4090,17 @@ async function bootApplication() {
   renderSelectedRequest();
   renderLookupResults([], "성함과 휴대전화로 등록한 견적을 조회하세요.");
   startQuoteCountdownTimer();
+
+  if (isSellerPath && activeSellerId && canUseApiServer()) {
+    const restoredId = activeSellerId;
+    await syncApprovedSellersFromServer({ showLoading: false });
+    if (activeSellerId !== restoredId) {
+      sellerDashboardLoading = false;
+      setView("sellerLogin", { replacePath: true });
+      return;
+    }
+    await syncSellerDashboardData({ showLoading: false });
+  }
 }
 
 bootApplication();
