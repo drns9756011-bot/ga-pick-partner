@@ -62,4 +62,3 @@
     if (modal.hidden) { images = []; index = 0; navigation.hidden = true; }
   }).observe(modal, { attributes: true, attributeFilter: ["hidden"] });
 })();
-

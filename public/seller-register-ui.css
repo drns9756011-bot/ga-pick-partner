@@ -52,4 +52,3 @@
   #sellerRegisterPage .form-row { grid-template-columns: minmax(0,1fr); gap: 20px; }
   #sellerRegisterPage .preview-card { position: static; }
 }
-

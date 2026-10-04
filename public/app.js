@@ -30,12 +30,14 @@ const STORAGE_KEYS = {
   sellerApplications: "pickquoteSellerApplications",
   approvedSellers: "pickquoteApprovedSellers",
   activeSellerId: "pickquoteActiveSellerId",
+  sellerSessionToken: "pickquoteSellerSessionToken",
   sellerBrandFilter: "pickquoteSellerBrandFilter",
   sellerRegionFilter: "pickquoteSellerRegionFilter",
   sellerSort: "pickquoteSellerSort",
 };
 const registeredSellerPhones = new Set();
 const sellerAccounts = new Map();
+localStorage.removeItem(STORAGE_KEYS.approvedSellers);
 hydrateApprovedSellerAccounts();
 restoreActiveSellerSession();
 restoreSellerFilterState();
@@ -648,13 +650,15 @@ function readActiveSellerSession() {
   }
 }
 
-function writeActiveSellerSession(sellerId) {
+function writeActiveSellerSession(sellerId, token = "") {
   try {
     if (sellerId) {
       sessionStorage.setItem(STORAGE_KEYS.activeSellerId, sellerId);
+      if (token) sessionStorage.setItem(STORAGE_KEYS.sellerSessionToken, token);
       return;
     }
     sessionStorage.removeItem(STORAGE_KEYS.activeSellerId);
+    sessionStorage.removeItem(STORAGE_KEYS.sellerSessionToken);
   } catch (error) {
     // 세션 저장을 사용할 수 없는 브라우저에서도 로그인 흐름은 계속 진행합니다.
   }
@@ -662,7 +666,7 @@ function writeActiveSellerSession(sellerId) {
 
 function restoreActiveSellerSession() {
   const sellerId = readActiveSellerSession();
-  if (sellerId && sellerAccounts.has(sellerId)) {
+  if (sellerId && sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken)) {
     activeSellerId = sellerId;
   }
 }
@@ -747,6 +751,9 @@ async function apiJson(path, options = {}) {
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
+        ...(sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken)
+          ? { "X-Seller-Session": sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken) }
+          : {}),
         ...(fetchOptions.headers || {}),
       },
       signal: controller.signal,
@@ -780,7 +787,13 @@ async function syncApprovedSellersFromServer(options = {}) {
     loadingTitle: "판매자 정보를 확인 중입니다.",
     loadingText: "승인된 판매자 계정을 서버에서 불러오고 있습니다.",
   });
-  if (!result?.ok || !Array.isArray(result.rows)) return;
+  if (!result?.ok || !Array.isArray(result.rows)) {
+    if (result?.status === 401) {
+      activeSellerId = "";
+      writeActiveSellerSession("");
+    }
+    return;
+  }
 
   writeStorageArray(STORAGE_KEYS.approvedSellers, result.rows);
   hydrateApprovedSellerAccounts();
@@ -1460,11 +1473,11 @@ function closeSellerMobileDetail(options = {}) {
 }
 
 function leaveSellerMobileDetail() {
+  closeSellerMobileDetail();
   if (window.history?.state?.sellerMobileDetail) {
     window.history.back();
     return;
   }
-  closeSellerMobileDetail();
 }
 
 function updateBrowserPath(view, replace = false) {
@@ -2044,6 +2057,33 @@ function getAvailableSellerBrands(baseRequests = getSellerTabRequests()) {
   return Array.from(new Set(baseRequests.map((request) => getSellerBrandValue(request)).filter(Boolean)));
 }
 
+let sellerSearchText = "";
+let sellerBidSubmitting = false;
+const sellerBidDrafts = new Map();
+bidForm.addEventListener("input", () => {
+  if (!selectedRequestId || !activeSellerId) return;
+  sellerBidDrafts.set(`${activeSellerId}:${selectedRequestId}`, {
+    price: bidForm.elements.bidPrice.value,
+    benefits: bidForm.elements.benefits.value,
+  });
+});
+
+document.querySelector("#sellerSearch")?.addEventListener("input", (event) => {
+  sellerSearchText = event.target.value.trim().toLocaleLowerCase();
+  renderRequests();
+  renderSelectedRequest();
+});
+document.querySelector("#sellerRefresh")?.addEventListener("click", async (event) => {
+  const button = event.currentTarget;
+  if (button.disabled) return;
+  button.disabled = true;
+  try {
+    await refreshCurrentViewFromServer();
+  } finally {
+    button.disabled = false;
+  }
+});
+
 function getFilteredSellerRequests() {
   const tabRequests = getSellerTabRequests();
   activeSellerBrandFilter = normalizeSellerBrandFilter(activeSellerBrandFilter);
@@ -2058,7 +2098,9 @@ function getFilteredSellerRequests() {
     );
   }
 
-  return filteredRequests;
+  return filteredRequests.filter((request) => !sellerSearchText ||
+    [request.items, request.region, request.quoteNumber].some((value) =>
+      String(value || "").toLocaleLowerCase().includes(sellerSearchText)));
 }
 
 function getSellerRequestsForDynamicRegion() {
@@ -2174,6 +2216,11 @@ function syncBidFormForRequest(request) {
   bidForm.elements.managerPhone.value = account?.phone ? formatPhoneNumber(account.phone) : "";
   bidForm.elements.bidPrice.value = sellerBid ? formatManwonInput(sellerBid.price) : "";
   bidForm.elements.benefits.value = sellerBid ? sellerBid.benefits : "";
+  const draft = request && sellerBidDrafts.get(`${activeSellerId}:${request.id}`);
+  if (draft) {
+    bidForm.elements.bidPrice.value = draft.price;
+    bidForm.elements.benefits.value = draft.benefits;
+  }
   bidForm.querySelector("button[type='submit']").textContent = sellerBid
     ? "제안 내용 수정"
     : "고객님에게 제안 보내기";
@@ -3465,15 +3512,8 @@ sellerQuoteWorkspace.addEventListener("click", async (event) => {
     return;
   }
 
-  const completedAt = new Date().toISOString();
-  request.saleCompletedAt = completedAt;
-  request.saleCompletedBidId = selectedBid.id;
-  request.reviewNotificationSentAt = completedAt;
-  setBidFormMessage(
-    "판매완료 처리되었습니다. 고객님에게 후기 작성 안내를 발송했습니다."
-  );
-  renderRequests();
-  renderSelectedRequest();
+  // This frontend has no confirmed sale-completion API; never report a local-only write as saved.
+  alert("판매완료 저장 기능은 서버 연동 확인 중입니다. 관리자에게 판매완료 처리를 요청해주세요.");
 });
 
 sellerLoginForm.addEventListener("submit", async (event) => {
@@ -3513,7 +3553,7 @@ sellerLoginForm.addEventListener("submit", async (event) => {
     ]);
 
     activeSellerId = loginId;
-    writeActiveSellerSession(loginId);
+    writeActiveSellerSession(loginId, loginResult.sessionToken);
     activeSellerTab = "all";
     resetSellerFilterState();
     setSellerLoginMessage("");
@@ -3545,14 +3585,19 @@ sellerLoginForm.addEventListener("submit", async (event) => {
 
 bidForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!selectedRequestId) return;
+  if (!selectedRequestId || sellerBidSubmitting) return;
+  const submittedRequestId = selectedRequestId;
+  const formData = new FormData(bidForm);
+  sellerBidSubmitting = true;
+  const submitButton = bidForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  try {
 
   if (canUseApiServer()) {
     await syncApprovedSellersFromServer();
     hydrateApprovedSellerAccounts();
   }
 
-  const formData = new FormData(bidForm);
   const account = sellerAccounts.get(activeSellerId);
   if (!account) {
     activeSellerId = "";
@@ -3564,13 +3609,18 @@ bidForm.addEventListener("submit", async (event) => {
 
   const branchName = account?.branch || "등록 지점";
   const channelName = account?.channel || "판매처";
-  const request = getSelectedRequest();
+  const request = requests.find((row) => sameId(row.id, submittedRequestId));
   const existingBid = request ? getActiveSellerBid(request) : null;
   const bidPrice = parseManwon(formData.get("bidPrice"));
   const benefits = formData.get("benefits").trim();
 
   if (!request) {
     setBidFormMessage("제안할 고객님 견적을 먼저 선택해주세요.", "error");
+    return;
+  }
+
+  if (isQuoteClosed(request) || isQuoteExpired(request)) {
+    setBidFormMessage("마감된 견적에는 제안을 보낼 수 없습니다.", "error");
     return;
   }
 
@@ -3605,7 +3655,7 @@ bidForm.addEventListener("submit", async (event) => {
 
   const localBid = existingBid || {
     id: `bid-${Date.now()}`,
-    requestId: selectedRequestId,
+    requestId: submittedRequestId,
     sellerId: activeSellerId,
   };
   const bidPayload = {
@@ -3630,11 +3680,18 @@ bidForm.addEventListener("submit", async (event) => {
   }
 
   renderHomeFeeds();
+  sellerBidDrafts.delete(`${activeSellerId}:${submittedRequestId}`);
   bidForm.reset();
   renderRequests();
   syncBidFormForRequest(getSelectedRequest());
   renderSelectedRequest();
   setBidFormMessage(existingBid ? "제안 내용이 수정되었습니다." : "고객님에게 제안이 전달되었습니다.");
+  } catch (error) {
+    setBidFormMessage("제안을 저장하지 못했습니다. 입력 내용을 확인하고 다시 시도해주세요.", "error");
+  } finally {
+    sellerBidSubmitting = false;
+    submitButton.disabled = bidForm.hidden;
+  }
 });
 
 sellerRegisterForm.addEventListener("submit", async (event) => {
@@ -3836,6 +3893,11 @@ window.addEventListener("afterprint", hideSecurityBlanket);
 function renderRequests() {
   const isRegionTab = activeSellerTab === "region";
   const isChatTab = activeSellerTab === "chat";
+  sellerQuoteWorkspace.classList.toggle("is-chat-workspace", isChatTab);
+  const search = document.querySelector("#sellerSearch");
+  if (search) search.disabled = isRegionTab || isChatTab;
+  const count = document.querySelector("#sellerResultCount");
+  if (count) count.textContent = "";
   sellerQuoteWorkspace.hidden = isRegionTab;
   sellerRegionPanel.hidden = !isRegionTab;
   const filterHost = document.querySelector("#sellerFilterHost");
@@ -3860,6 +3922,7 @@ function renderRequests() {
   requestList.innerHTML = "";
   renderSellerFilterBar();
   const filteredRequests = syncSelectedRequestWithTab();
+  if (count) count.textContent = `조회 ${filteredRequests.length}건`;
 
   sellerTabs.forEach((tab) => {
     tab.classList.toggle("is-active", tab.dataset.sellerTab === activeSellerTab);
@@ -3910,12 +3973,9 @@ function renderRequests() {
     item.innerHTML = `
       <strong>${safeItems}</strong>
       <span>브랜드 ${safeDesiredBrand}</span>
-      <span>견적서 ${safeQuoteType}</span>
       <span>${safeCustomer} · ${isClosedTab ? safePhone : safeRegion}</span>
       <span>견적번호 ${safeQuoteNumber}</span>
       ${quoteCountdownMarkup(request, { prefix: "남은 시간 " })}
-      <span>구매 목적 ${safePurchasePurpose}</span>
-      <span>설치 예정일 ${safeInstallDate}</span>
       ${
         isClosedTab
           ? `<span>1위 금액 ${lowestBid ? formatPrice(lowestBid.price) : "제안 없음"}</span>`
@@ -3953,7 +4013,7 @@ function renderSelectedRequest() {
   }
 
   const isClosedTab = activeSellerTab === "closed";
-  setBidFormEnabled(!isClosedTab);
+  setBidFormEnabled(!isClosedTab && !isQuoteClosed(request) && !isQuoteExpired(request));
   syncBidFormForRequest(request);
 
   const visiblePhone = isClosedTab ? maskPhone(request.phone) : canActiveSellerSeeCustomerPhone(request) ? request.phone : maskPhone(request.phone);

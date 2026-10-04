@@ -160,9 +160,10 @@
   <link rel="stylesheet" href="/seller-register-ui.css?v=20260930" />
   <link rel="stylesheet" href="/seller-image-gallery.css?v=20260930" />
   <script defer src="/seller-image-gallery.js?v=20260930"></script>
+  <link rel="stylesheet" href="/seller-workspace.css?v=20260930" />
   <link rel="stylesheet" href="/partner-console-ui.css?v=20260930-1" />
     <script defer src="/privacy-policy.js?v=20260811-privacy-policy-v19"></script>
-  <script defer src="/app.js?v=20261003-fast-manager"></script>
+  <script defer src="/app.js?v=20261004-quote-privacy"></script>
     <script defer src="/customer-wizard.js?v=20260819-phone-verification-v4"></script>
     <script defer src="/page-guide.js?v=20260731-mobile-modal-safe-area"></script>
   </head>
@@ -464,6 +465,11 @@
         <div class="page-head">
           <p class="eyebrow">픽견적 파트너</p>
           <h2>견적 관리</h2>
+          <div class="seller-workspace-tools">
+            <label>견적 검색 <input type="search" id="sellerSearch" placeholder="품목 · 지역 · 견적번호" /></label>
+            <button type="button" id="sellerRefresh" title="새로고침" aria-label="견적 새로고침">↻</button>
+            <span id="sellerResultCount" role="status"></span>
+          </div>
         </div>
 
         <div class="seller-tabs" aria-label="판매자 견적 분류">
