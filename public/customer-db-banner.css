@@ -1,7 +1,8 @@
 .partner-site #sellerPage .customer-db-banner {
-  display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  width: 100%; min-width: 0; margin: 0 0 24px; padding: 18px 24px;
-  border: 1px solid #deded9; border-radius: 6px; background: #f4f4f2;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px;
+  width: 100%; min-width: 0; height: 144px; box-sizing: border-box; margin: 0 0 24px; padding: 18px 24px;
+  border: 1px solid #deded9; border-radius: 6px;
+  background: #f4f4f2 url('/assets/customer-db-banner-desktop-v2.png') right center / auto 100% no-repeat;
   color: #363635; text-decoration: none; text-align: left;
 }
 .db-banner-copy { display: grid; gap: 4px; }
@@ -29,7 +30,7 @@
   .partner-site #sellerRegionPanel { grid-column: 2; grid-row: 2; }
 }
 @media (max-width: 760px) and (pointer: coarse) {
-  .partner-site #sellerPage .customer-db-banner { display: block; padding: 0; overflow: hidden; }
+  .partner-site #sellerPage .customer-db-banner { display: block; height: auto; padding: 0; overflow: hidden; background: #f4f4f2; }
   .partner-site #sellerPage .customer-db-banner img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: contain; }
   .customer-db-banner :is(.db-banner-copy,.db-banner-action) { display: none; }
   .seller-mobile-detail-open .customer-db-banner { display: none !important; }
