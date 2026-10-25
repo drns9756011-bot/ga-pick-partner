@@ -38,6 +38,7 @@ const STORAGE_KEYS = {
   approvedSellers: "pickquoteApprovedSellers",
   activeSellerId: "pickquoteActiveSellerId",
   sellerSessionToken: "pickquoteSellerSessionToken",
+  sellerLastActivity: "pickquoteSellerLastActivity",
   sellerBrandFilter: "pickquoteSellerBrandFilter",
   sellerRegionFilter: "pickquoteSellerRegionFilter",
   sellerSort: "pickquoteSellerSort",
@@ -668,10 +669,12 @@ function writeActiveSellerSession(sellerId, token = "") {
     if (sellerId) {
       sessionStorage.setItem(STORAGE_KEYS.activeSellerId, sellerId);
       if (token) sessionStorage.setItem(STORAGE_KEYS.sellerSessionToken, token);
+      if (token) sessionStorage.setItem(STORAGE_KEYS.sellerLastActivity, String(Date.now()));
       return;
     }
     sessionStorage.removeItem(STORAGE_KEYS.activeSellerId);
     sessionStorage.removeItem(STORAGE_KEYS.sellerSessionToken);
+    sessionStorage.removeItem(STORAGE_KEYS.sellerLastActivity);
   } catch (error) {
     // 세션 저장을 사용할 수 없는 브라우저에서도 로그인 흐름은 계속 진행합니다.
   }
@@ -680,6 +683,8 @@ function writeActiveSellerSession(sellerId, token = "") {
 function restoreActiveSellerSession() {
   const sellerId = readActiveSellerSession();
   if (sellerId && sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken)) {
+    const last = Number(sessionStorage.getItem(STORAGE_KEYS.sellerLastActivity));
+    if (last && Date.now() - last >= 3600000) { writeActiveSellerSession(''); return; }
     activeSellerId = sellerId;
   }
 }
@@ -1458,10 +1463,7 @@ function hydrateApprovedSellerAccounts() {
     });
     registeredSellerPhones.add(normalizePhone(seller.phone));
   });
-  if (activeSellerId && !sellerAccounts.has(activeSellerId)) {
-    activeSellerId = "";
-    writeActiveSellerSession("");
-  }
+  // An empty profile cache is not evidence that the server session is invalid.
 }
 
 function hasPendingSellerApplication(sellerId, phone) {
@@ -4294,6 +4296,48 @@ function trackPublicPageVisit() {
   }).catch(() => {});
 }
 
+let sellerActivityPending = false;
+let sellerActivityInFlight = false;
+function expireSellerSession() {
+  const token = sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken);
+  activeSellerId = '';
+  writeActiveSellerSession('');
+  sellerActivityPending = false;
+  closeAnonymousConsultation();
+  document.dispatchEvent(new Event('seller-leads-close'));
+  if (token) fetch('/api/seller-session', { method: 'DELETE', headers: { 'X-Seller-Session': token }, keepalive: true }).catch(() => {});
+  setView('sellerLogin', { replacePath: true });
+  setSellerLoginMessage('1시간 동안 활동이 없어 로그아웃되었습니다. 다시 로그인해주세요.', 'error');
+}
+function checkSellerIdle() {
+  if (!activeSellerId) return false;
+  const last = Number(sessionStorage.getItem(STORAGE_KEYS.sellerLastActivity));
+  if (last && Date.now() - last >= 3600000) { expireSellerSession(); return false; }
+  return true;
+}
+async function flushSellerActivity() {
+  if (!checkSellerIdle() || !sellerActivityPending || sellerActivityInFlight || document.hidden) return;
+  sellerActivityPending = false;
+  sellerActivityInFlight = true;
+  const token = sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken);
+  try {
+    const result = await apiJson('/api/seller-session', { method: 'POST', showLoading: false });
+    if (token !== sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken)) return;
+    if (result?.status === 401) expireSellerSession();
+    else if (!result?.ok) sellerActivityPending = true;
+  } finally { sellerActivityInFlight = false; }
+}
+for (const name of ['pointerdown', 'keydown', 'scroll']) {
+  document.addEventListener(name, event => {
+    if (!event.isTrusted || document.hidden || !checkSellerIdle()) return;
+    sessionStorage.setItem(STORAGE_KEYS.sellerLastActivity, String(Date.now()));
+    sellerActivityPending = true;
+  }, { passive: true, capture: true });
+}
+setInterval(() => { checkSellerIdle(); void flushSellerActivity(); }, 15000);
+document.addEventListener('visibilitychange', checkSellerIdle);
+window.addEventListener('pageshow', checkSellerIdle);
+
 async function bootApplication() {
   trackPublicPageVisit();
   const initialPath = normalizeAppPath(window.location.pathname);
@@ -4312,6 +4356,13 @@ async function bootApplication() {
 
   if (isSellerPath && activeSellerId && canUseApiServer()) {
     const restoredId = activeSellerId;
+    const session = await apiJson('/api/seller-session', { showLoading: false });
+    if (session?.status === 401) { expireSellerSession(); return; }
+    if (session?.ok && session.lastActivityAt) {
+      const saved = Number(sessionStorage.getItem(STORAGE_KEYS.sellerLastActivity)) || 0;
+      sessionStorage.setItem(STORAGE_KEYS.sellerLastActivity, String(Math.max(saved, Date.parse(session.lastActivityAt))));
+      if (!checkSellerIdle()) return;
+    }
     await syncApprovedSellersFromServer({ showLoading: false });
     if (activeSellerId !== restoredId) {
       sellerDashboardLoading = false;
