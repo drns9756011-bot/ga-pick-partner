@@ -4342,6 +4342,7 @@ document.addEventListener('visibilitychange', checkSellerIdle);
 window.addEventListener('pageshow', checkSellerIdle);
 
 async function bootApplication() {
+  const openCustomerDB = new URLSearchParams(window.location.search).get('tab') === 'leads';
   trackPublicPageVisit();
   const initialPath = normalizeAppPath(window.location.pathname);
   const isSellerPath = initialPath === "/";
@@ -4373,6 +4374,9 @@ async function bootApplication() {
       return;
     }
     await syncSellerDashboardData({ showLoading: false });
+  }
+  if (activeSellerId && openCustomerDB) {
+    document.querySelector('[data-seller-tab="leads"]')?.click();
   }
 }
 

@@ -41,6 +41,7 @@ export default {
     }
     if (path === "/" || path === "/index.html" || path === "/login") return serveAsset(request, env, "/seller/index.html", routeVersion);
     if (path === "/register" || path === "/register/index.html") return serveAsset(request, env, "/seller/register/index.html", routeVersion);
+    if (path === "/db-checkout" || path === "/db-checkout/") return serveAsset(request, env, "/db-checkout/index.html", routeVersion);
     if (path === "/seller" || path === "/seller/index.html") return Response.redirect(`${PARTNER_ORIGIN}/`, 308);
     if (path === "/seller/register" || path === "/seller/register/index.html") return Response.redirect(`${PARTNER_ORIGIN}/register`, 308);
 
