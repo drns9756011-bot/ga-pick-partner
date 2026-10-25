@@ -3112,6 +3112,7 @@ document.addEventListener("DOMContentLoaded", () => {
 sellerTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     activeSellerTab = tab.dataset.sellerTab;
+    document.dispatchEvent(new Event(activeSellerTab === 'leads' ? 'seller-leads-open' : 'seller-leads-close'));
     closeSellerMobileDetail();
     setBidFormMessage("");
     renderRequests();
@@ -4036,6 +4037,17 @@ window.addEventListener("beforeprint", () => showSecurityBlanket(0));
 window.addEventListener("afterprint", hideSecurityBlanket);
 
 function renderRequests() {
+  const isLeadsTab = activeSellerTab === 'leads';
+  const leadPanel = document.querySelector('#leadWorkspace');
+  if (leadPanel) leadPanel.hidden = !isLeadsTab;
+  const pageHead = document.querySelector('#sellerPage > .page-head');
+  if (pageHead) pageHead.hidden = isLeadsTab;
+  if (isLeadsTab) {
+    sellerQuoteWorkspace.hidden = true;
+    sellerRegionPanel.hidden = true;
+    sellerTabs.forEach(tab => tab.classList.toggle('is-active', tab.dataset.sellerTab === activeSellerTab));
+    return;
+  }
   const isRegionTab = activeSellerTab === "region";
   const isChatTab = activeSellerTab === "chat";
   sellerQuoteWorkspace.classList.toggle("is-chat-workspace", isChatTab);

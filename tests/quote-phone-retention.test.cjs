@@ -43,7 +43,7 @@ test('open pages erase cached phone values at expiry and refresh the visible vie
 test('seller pages use the current shared script and quote consent duration', () => {
   for (const file of ['seller/index.html', 'seller/register/index.html']) {
     const html = readFileSync(path.join(__dirname, '../public', file), 'utf8');
-    assert.match(html, /app\.js\?v=20261025-chat-safe/);
+    assert.match(html, /app\.js\?v=20261025-leads/);
     assert.match(html, /seller-recovery\.js\?v=20261014-secure-recovery/);
     assert.match(html, /보유 기간: 견적 등록일로부터 30일/);
   }

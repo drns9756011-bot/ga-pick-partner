@@ -163,7 +163,9 @@
   <link rel="stylesheet" href="/seller-workspace.css?v=20261025-stone" />
   <link rel="stylesheet" href="/partner-console-ui.css?v=20261025-chat-safe" />
     <script defer src="/privacy-policy.js?v=20261007-selection-retention"></script>
-  <script defer src="/app.js?v=20261025-chat-safe"></script>
+  <script defer src="/app.js?v=20261025-leads"></script>
+  <link rel="stylesheet" href="/lead-workspace.css?v=20261025-leads" />
+  <script defer src="/lead-workspace.js?v=20261025-leads" data-role="seller"></script>
   <script defer src="/seller-recovery.js?v=20261014-secure-recovery"></script>
     <script defer src="/customer-wizard.js?v=20260819-phone-verification-v4"></script>
   </head>
@@ -479,8 +481,10 @@
           <button type="button" data-seller-tab="closed">종료된 견적</button>
           <button type="button" data-seller-tab="chat">채팅방 <span class="seller-chat-tab-badge" id="sellerChatTabBadge" hidden>0</span></button>
           <button type="button" data-seller-tab="region">매니저 정보 변경</button>
+          <button type="button" data-seller-tab="leads">배정 고객 관리</button>
         </div>
 
+        <section id="leadWorkspace" aria-label="배정 고객 관리" hidden></section>
         <div class="seller-layout seller-page-layout" id="sellerQuoteWorkspace">
           <aside class="seller-list-column" aria-label="접수 견적 필터와 목록">
             <div class="seller-filter-host" id="sellerFilterHost" aria-label="견적 필터"></div>
