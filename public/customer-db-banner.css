@@ -1,0 +1,30 @@
+.partner-site #sellerPage .customer-db-banner {
+  display: block;
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 880px;
+  min-width: 0;
+  justify-self: center;
+  overflow: hidden;
+  border: 1px solid #deded9;
+  border-radius: 6px;
+  background: #f4f4f2;
+}
+.partner-site #sellerPage .customer-db-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  object-fit: contain;
+}
+.partner-site #sellerPage .customer-db-banner:focus-visible {
+  outline: 3px solid #363635;
+  outline-offset: 4px;
+}
+.partner-site #sellerPage:has([data-seller-tab="chat"].is-active) .customer-db-banner {
+  display: none;
+}
+@media (max-width: 760px) {
+  .partner-site #sellerPage .customer-db-banner { margin: 0 0 24px; }
+  .seller-mobile-detail-open .customer-db-banner { display: none !important; }
+}

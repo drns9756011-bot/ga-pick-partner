@@ -1,0 +1,25 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync, existsSync } from 'node:fs';
+import worker from '../src/index.js';
+
+test('banner links to checkout with responsive uncropped artwork', () => {
+  const html = readFileSync(new URL('../public/seller/index.html', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../public/customer-db-banner.css', import.meta.url), 'utf8');
+  assert.match(html, /class="customer-db-banner" href="\/db-checkout"/);
+  assert.match(html, /customer-db-banner.css\?v=20261025-v1/);
+  assert.match(css, /object-fit: contain/);
+  assert.match(css, /grid-column: 1 \/ -1/);
+  assert.match(css, /max-width: 760px/);
+  assert.ok(existsSync(new URL('../public/assets/customer-db-banner-v1.png', import.meta.url)));
+});
+
+test('banner destination is served by the partner Worker without stale cache', async () => {
+  let asset;
+  const response = await worker.fetch(new Request('https://partner.ga-pick.com/db-checkout'), {
+    ASSETS: { fetch: async request => { asset = new URL(request.url).pathname; return new Response('checkout'); } },
+  });
+  assert.equal(asset, '/db-checkout/index.html');
+  assert.equal(response.headers.get('Cache-Control'), 'no-store');
+  assert.equal(response.headers.get('X-GA-Pick-Partner-Route-Version'), '20261025-customer-db-banner');
+});
