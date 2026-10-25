@@ -53,7 +53,7 @@
         }
         root.querySelector('.lead-purchase-link').textContent = access.access ? '추가 구매' : 'DB 신청하기';
         root.querySelector('.lead-head .lead-purchase-link').hidden = !access.access;
-        if (!access.access) { rows = []; list.innerHTML = '<section class="lead-locked"><h3>고객DB</h3><p>1건 <strong>8,000원</strong></p><p>결제 후 관리자가 고객을 배정합니다.</p><a href="/db-checkout" class="lead-purchase-link">DB 신청하기</a></section>'; return; }
+        if (!access.access) { rows = []; list.innerHTML = '<section class="lead-locked"><h3>고객DB</h3><div class="db-price-offer"><span class="db-price-original">1건 정가 <s>10,000원</s></span><p><span class="db-discount">20% 할인</span> <strong>8,000원</strong><span> / 건</span></p><small>1건당 2,000원 할인</small></div><p>결제 후 관리자가 고객을 배정합니다.</p><a href="/db-checkout" class="lead-purchase-link">DB 신청하기</a></section>'; return; }
       }
       const fields = new FormData(root.querySelector('.lead-toolbar'));
       const query = new URLSearchParams({ page: String(page), q: fields.get('q') || '', status: fields.get('status') || '' });

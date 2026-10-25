@@ -16,6 +16,8 @@
     const n = Number($('quantity').value), valid = Number.isInteger(n) && n >= 1 && n <= 100;
     $('summaryQuantity').textContent = valid ? `${n}건` : '-';
     $('total').textContent = valid ? money(n * 8000) : '-';
+    $('originalTotal').textContent = valid ? money(n * 10000) : '-';
+    $('discountTotal').textContent = valid ? money(n * 2000) : '-';
     $('pay').textContent = busy ? '결제창 연결 중' : `${valid ? money(n * 8000) : ''}원 카드결제`;
     $('pay').disabled = !ready || !valid || busy;
     $('minus').disabled = n <= 1 || busy; $('plus').disabled = n >= 100 || busy;

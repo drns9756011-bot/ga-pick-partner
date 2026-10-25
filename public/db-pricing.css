@@ -1,0 +1,7 @@
+.db-price-offer { margin: 24px 0; color: #363635; }
+.db-price-original { color: #666660; font-size: 15px; }
+.db-price-offer p { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 6px 0 !important; }
+.db-price-offer strong { font-size: 28px; font-weight: 750; line-height: 1.4; }
+.db-discount { color: #74383f; font-weight: 700; }
+.db-price-offer small { font-size: 14px; color: #666660; }
+.purchase-layout dd s { color: #666660; font-weight: 500; }
