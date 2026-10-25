@@ -4298,6 +4298,7 @@ function trackPublicPageVisit() {
 
 let sellerActivityPending = false;
 let sellerActivityInFlight = false;
+let sellerActivitySentAt = 0;
 function expireSellerSession() {
   const token = sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken);
   activeSellerId = '';
@@ -4319,6 +4320,7 @@ async function flushSellerActivity() {
   if (!checkSellerIdle() || !sellerActivityPending || sellerActivityInFlight || document.hidden) return;
   sellerActivityPending = false;
   sellerActivityInFlight = true;
+  sellerActivitySentAt = Date.now();
   const token = sessionStorage.getItem(STORAGE_KEYS.sellerSessionToken);
   try {
     const result = await apiJson('/api/seller-session', { method: 'POST', showLoading: false });
@@ -4332,6 +4334,7 @@ for (const name of ['pointerdown', 'keydown', 'scroll']) {
     if (!event.isTrusted || document.hidden || !checkSellerIdle()) return;
     sessionStorage.setItem(STORAGE_KEYS.sellerLastActivity, String(Date.now()));
     sellerActivityPending = true;
+    if (Date.now() - sellerActivitySentAt >= 15000) void flushSellerActivity();
   }, { passive: true, capture: true });
 }
 setInterval(() => { checkSellerIdle(); void flushSellerActivity(); }, 15000);
