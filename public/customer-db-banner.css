@@ -1,16 +1,12 @@
 .partner-site #sellerPage .customer-db-banner {
-  display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 12px;
-  width: 100%; min-width: 0; height: 144px; box-sizing: border-box; margin: 0 0 24px; padding: 18px 24px;
-  border: 1px solid #deded9; border-radius: 6px;
-  background: #f4f4f2 url('/assets/customer-db-banner-desktop-v2.png') right center / auto 100% no-repeat;
+  display: block;
+  width: min(100%, 660px); min-width: 0; box-sizing: border-box; margin: 0 0 24px; padding: 0;
+  border: 1px solid #deded9; border-radius: 6px; overflow: hidden;
+  background: #fff;
   color: #363635; text-decoration: none; text-align: left;
 }
-.db-banner-copy { display: grid; gap: 4px; }
-.db-banner-copy strong { font-size: 20px; line-height: 1.4; font-weight: 750; }
-.db-banner-copy > span { font-size: 14px; color: #666660; }
-.db-banner-copy b { color: #74383f; }
-.db-banner-action { font-size: 15px; font-weight: 700; white-space: nowrap; }
-.partner-site #sellerPage .customer-db-banner img { display: none; }
+.customer-db-banner picture { display: block; }
+.partner-site #sellerPage .customer-db-banner img { display: block; width: 100%; height: auto; object-fit: contain; }
 .partner-site #sellerPage .customer-db-banner:focus-visible { outline: 3px solid #363635; outline-offset: 4px; }
 .partner-site #sellerPage:has([data-seller-tab="chat"].is-active) .customer-db-banner { display: none; }
 /* Narrow mouse-driven windows retain the desktop workspace. */
@@ -30,8 +26,7 @@
   .partner-site #sellerRegionPanel { grid-column: 2; grid-row: 2; }
 }
 @media (max-width: 760px) and (pointer: coarse) {
-  .partner-site #sellerPage .customer-db-banner { display: block; height: auto; padding: 0; overflow: hidden; background: #f4f4f2; }
+  .partner-site #sellerPage .customer-db-banner { display: block; width: 100%; height: auto; padding: 0; overflow: hidden; background: #f4f4f2; }
   .partner-site #sellerPage .customer-db-banner img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: contain; }
-  .customer-db-banner :is(.db-banner-copy,.db-banner-action) { display: none; }
   .seller-mobile-detail-open .customer-db-banner { display: none !important; }
 }

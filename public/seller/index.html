@@ -165,7 +165,7 @@
     <script defer src="/privacy-policy.js?v=20261007-selection-retention"></script>
   <script defer src="/app.js?v=20261025-leads"></script>
   <link rel="stylesheet" href="/lead-workspace.css?v=20261025-leads" />
-  <link rel="stylesheet" href="/customer-db-banner.css?v=20261025-image-v3" />
+  <link rel="stylesheet" href="/customer-db-banner.css?v=20261025-bitmap-v4" />
   <link rel="stylesheet" href="/db-pricing.css?v=20261025-discount" />
   <script defer src="/lead-workspace.js?v=20261025-discount" data-role="seller"></script>
   <script defer src="/seller-recovery.js?v=20261014-secure-recovery"></script>
@@ -468,9 +468,10 @@
       <section class="page seller-page" id="sellerPage" data-page="seller">
         <div class="page-head">
           <a class="customer-db-banner" href="/db-checkout" aria-label="고객DB 신청하기">
-            <span class="db-banner-copy"><strong>새로운 고객과의 연결, 고객DB</strong><span>정가 <s>10,000원</s> · <b>20% 할인 8,000원 / 건</b></span></span>
-            <span class="db-banner-action">고객DB 신청하기 <span aria-hidden="true">→</span></span>
-            <img src="/assets/customer-db-banner-v1.png" width="1774" height="887" alt="새로운 고객과의 연결, 고객DB로 시작하세요. 신청부터 배정 고객 관리까지 한곳에서. 고객DB 신청하기" decoding="async" />
+            <picture>
+              <source media="(max-width: 760px) and (pointer: coarse)" srcset="/assets/customer-db-banner-v1.png" width="1774" height="887" />
+              <img src="/assets/customer-db-banner-complete-v3.png" width="2169" height="725" alt="새로운 고객과의 연결, 고객DB. 정가 10,000원에서 20% 할인, 건당 8,000원. 고객DB 신청하기" decoding="async" />
+            </picture>
           </a>
           <p class="eyebrow">픽견적 파트너</p>
           <h2>견적 관리</h2>

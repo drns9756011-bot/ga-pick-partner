@@ -7,10 +7,11 @@ test('banner links to checkout with responsive uncropped artwork', () => {
   const html = readFileSync(new URL('../public/seller/index.html', import.meta.url), 'utf8');
   const css = readFileSync(new URL('../public/customer-db-banner.css', import.meta.url), 'utf8');
   assert.match(html, /class="customer-db-banner" href="\/db-checkout"/);
-  assert.match(html, /customer-db-banner.css\?v=20261025-image-v3/);
-  assert.match(css, /height: 144px/);
-  assert.match(css, /customer-db-banner-desktop-v2.png/);
-  assert.ok(existsSync(new URL('../public/assets/customer-db-banner-desktop-v2.png', import.meta.url)));
+  assert.match(html, /customer-db-banner.css\?v=20261025-bitmap-v4/);
+  assert.match(css, /width: min\(100%, 660px\)/);
+  assert.doesNotMatch(html, /db-banner-copy|db-banner-action/);
+  assert.match(html, /customer-db-banner-complete-v3.png/);
+  assert.ok(existsSync(new URL('../public/assets/customer-db-banner-complete-v3.png', import.meta.url)));
   assert.match(css, /object-fit: contain/);
   assert.ok(html.indexOf('class="customer-db-banner"') < html.indexOf('<h2>견적 관리</h2>'));
   assert.match(css, /\(hover: hover\) and \(pointer: fine\)/);
