@@ -8,7 +8,7 @@ test('partner routes load the neutral palette and bottom contact control', () =>
   for (const file of ['seller/index.html', 'seller/register/index.html']) {
     const html = readFileSync(path.join(root, file), 'utf8');
     for (const sheet of ['partner-console-ui', 'seller-register-ui', 'seller-workspace']) {
-      assert.ok(html.includes(`${sheet}.css?v=20261025-stone`));
+      assert.ok(html.includes(`${sheet}.css?v=${sheet === 'partner-console-ui' ? '20261025-chat-safe' : '20261025-stone'}`));
     }
   }
   const css = readFileSync(path.join(root, 'partner-console-ui.css'), 'utf8');
