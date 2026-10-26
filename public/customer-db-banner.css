@@ -1,6 +1,6 @@
 .partner-site #sellerPage .customer-db-banner {
   display: block;
-  width: min(100%, 660px); min-width: 0; box-sizing: border-box; margin: 0 0 24px; padding: 0;
+  width: min(100%, 660px); min-width: 0; box-sizing: border-box; margin: 0 auto 24px; padding: 0;
   border: 1px solid #deded9; border-radius: 6px; overflow: hidden;
   background: #fff;
   color: #363635; text-decoration: none; text-align: left;

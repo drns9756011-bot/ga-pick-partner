@@ -7,8 +7,9 @@ test('banner links to checkout with responsive uncropped artwork', () => {
   const html = readFileSync(new URL('../public/seller/index.html', import.meta.url), 'utf8');
   const css = readFileSync(new URL('../public/customer-db-banner.css', import.meta.url), 'utf8');
   assert.match(html, /class="customer-db-banner" href="\/db-checkout"/);
-  assert.match(html, /customer-db-banner.css\?v=20261025-bitmap-v4/);
+  assert.match(html, /customer-db-banner.css\?v=20261026-centered-v5/);
   assert.match(css, /width: min\(100%, 660px\)/);
+  assert.match(css, /margin: 0 auto 24px/);
   assert.doesNotMatch(html, /db-banner-copy|db-banner-action/);
   assert.match(html, /customer-db-banner-complete-v3.png/);
   assert.ok(existsSync(new URL('../public/assets/customer-db-banner-complete-v3.png', import.meta.url)));
