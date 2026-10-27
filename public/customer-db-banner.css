@@ -8,7 +8,13 @@
 .customer-db-banner picture { display: block; }
 .partner-site #sellerPage .customer-db-banner img { display: block; width: 100%; height: auto; object-fit: contain; }
 .partner-site #sellerPage .customer-db-banner:focus-visible { outline: 3px solid #363635; outline-offset: 4px; }
-.partner-site #sellerPage:has([data-seller-tab="chat"].is-active) .customer-db-banner { display: none; }
+.customer-db-banner .db-inventory-strip { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; padding: 12px 16px; border-top: 1px solid #deded9; background: #f4f4f2; color: #363635; font-size: 14px; line-height: 1.5; }
+.db-inventory-strip [data-lead-inventory] { min-width: 0; overflow-wrap: anywhere; font-weight: 700; }
+.db-inventory-strip .db-inventory-action { font-weight: 700; white-space: nowrap; }
+.db-banner-fallback { padding: 24px; color: #363635; font-size: 18px; line-height: 1.7; }
+.db-inventory-status { margin: 16px 0; padding: 14px 16px; border-left: 3px solid #363635; background: #f4f4f2; color: #363635; font-size: 16px; font-weight: 700; line-height: 1.6; }
+.partner-site #sellerPage > .page-head > [hidden], .customer-db-banner picture[hidden], .db-banner-fallback[hidden] { display: none !important; }
+.partner-site #sellerPage > #leadWorkspace { grid-row: 2; }
 /* Narrow mouse-driven windows retain the desktop workspace. */
 @media (hover: hover) and (pointer: fine) {
   body.partner-site { min-width: 1100px; }
@@ -28,5 +34,4 @@
 @media (max-width: 760px) and (pointer: coarse) {
   .partner-site #sellerPage .customer-db-banner { display: block; width: 100%; height: auto; padding: 0; overflow: hidden; background: #f4f4f2; }
   .partner-site #sellerPage .customer-db-banner img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: contain; }
-  .seller-mobile-detail-open .customer-db-banner { display: none !important; }
 }

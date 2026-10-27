@@ -4043,7 +4043,10 @@ function renderRequests() {
   const leadPanel = document.querySelector('#leadWorkspace');
   if (leadPanel) leadPanel.hidden = !isLeadsTab;
   const pageHead = document.querySelector('#sellerPage > .page-head');
-  if (pageHead) pageHead.hidden = isLeadsTab;
+  if (pageHead) {
+    pageHead.hidden = false;
+    pageHead.querySelectorAll(':scope > .eyebrow, :scope > h2, :scope > .seller-workspace-tools').forEach(element => { element.hidden = isLeadsTab; });
+  }
   if (isLeadsTab) {
     sellerQuoteWorkspace.hidden = true;
     sellerRegionPanel.hidden = true;

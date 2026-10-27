@@ -163,8 +163,10 @@
   <link rel="stylesheet" href="/seller-workspace.css?v=20261025-stone" />
   <link rel="stylesheet" href="/partner-console-ui.css?v=20261025-chat-safe" />
     <script defer src="/privacy-policy.js?v=20261007-selection-retention"></script>
-  <script defer src="/app.js?v=20261025-leads"></script>
+  <script defer src="/app.js?v=20261027-db-inventory"></script>
   <link rel="stylesheet" href="/lead-workspace.css?v=20261025-leads" />
+  <link rel="stylesheet" href="/customer-db-banner.css?v=20261027-db-inventory" />
+  <script defer src="/lead-availability.js?v=20261027-db-inventory"></script>
   <script defer src="/lead-workspace.js?v=20261025-leads" data-role="seller"></script>
   <script defer src="/seller-recovery.js?v=20261014-secure-recovery"></script>
     <script defer src="/customer-wizard.js?v=20260819-phone-verification-v4"></script>
@@ -465,6 +467,14 @@
 
       <section class="page seller-page" id="sellerPage" data-page="seller">
         <div class="page-head">
+          <a class="customer-db-banner" href="/db-checkout" aria-label="고객DB 신청하기" aria-describedby="customerDBAvailability">
+            <picture>
+              <source media="(max-width: 760px) and (pointer: coarse)" srcset="/assets/customer-db-banner-v1.png" width="1774" height="887" />
+              <img src="/assets/customer-db-banner-complete-v3.png" width="2169" height="725" alt="새로운 고객과의 연결, 고객DB. 정가 10,000원에서 20% 할인, 건당 8,000원. 고객DB 신청하기" decoding="async" />
+            </picture>
+            <span class="db-banner-fallback" hidden>새로운 고객과의 연결, 고객DB<br>정가 10,000원에서 20% 할인 · 8,000원 / 건</span>
+            <span class="db-inventory-strip"><span id="customerDBAvailability" data-lead-inventory role="status" aria-live="polite">배정 가능한 고객DB 확인 중</span><span class="db-inventory-action">DB 신청하기 →</span></span>
+          </a>
           <p class="eyebrow">픽견적 파트너</p>
           <h2>견적 관리</h2>
           <div class="seller-workspace-tools">
