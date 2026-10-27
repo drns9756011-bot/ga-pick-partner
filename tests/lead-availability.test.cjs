@@ -44,7 +44,7 @@ test('confirmed waiting stock and personal purchases are distinguished in the re
   s.events['lead-purchase-updated'](); await tick();
   assert.equal(s.nodes[0].textContent, '내 DB 5건 · 배정완료 0건 · 미배정 5건'); assert.equal(s.badges[0].textContent, '5');
   Object.assign(s.payload, { assignedCount: 3, unassignedCount: 2 });
-  s.events.focus(); await tick();
+  s.events['lead-workspace-updated'](); await tick();
   assert.equal(s.nodes[0].textContent, '내 DB 5건 · 배정완료 3건 · 미배정 2건');
 });
 test('logout clears stock and anonymous pages do not fetch inventory', async () => {

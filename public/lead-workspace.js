@@ -60,6 +60,7 @@
       const data = await api(`?${query}`);
       if (version !== generation) return;
       rows = data.rows; render();
+      if (!admin) document.dispatchEvent(new Event('lead-workspace-updated'));
       root.querySelector('[data-action="prev"]').disabled = page === 1;
       root.querySelector('[data-action="next"]').disabled = !data.hasMore;
       root.querySelector('.lead-pager span').textContent = `${page} 페이지`;
@@ -154,6 +155,11 @@
   if (admin) { say('관리자 인증 후 고객 DB를 확인할 수 있습니다.'); }
   else {
     document.addEventListener('seller-leads-open', load);
+    const resume = () => {
+      if (!document.hidden && !root.hidden && !dialog.open && !loading && document.querySelector('#sellerPage')?.classList.contains('is-active')) void load();
+    };
+    window.addEventListener('focus', resume);
+    document.addEventListener('visibilitychange', resume);
     document.addEventListener('seller-leads-close', () => { generation++; clearPhones(); rows = []; list.replaceChildren(); if (dialog.open) dialog.close(); });
     const sellerPage = document.querySelector('#sellerPage');
     if (sellerPage) new MutationObserver(() => {

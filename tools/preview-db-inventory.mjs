@@ -16,7 +16,12 @@ const server = createServer(async (req, res) => {
       if (route === 'seller-session') data = { ok: true, lastActivityAt: new Date().toISOString() };
       if (route === 'approved-sellers') data.rows = [seller];
       if (route === 'lead-availability') data = { ok: true, availableCount: 0, waitingCount: 20, assignedCount: process.argv.includes('--paid') ? 2 : 0, unassignedCount: process.argv.includes('--paid') ? 3 : 0, hasPurchased: process.argv.includes('--paid'), checkedAt: new Date().toISOString() };
-      if (route === 'lead-payments') data = { ok: true, access: false, remaining: 0, ready: false };
+      if (route === 'lead-payments') data = { ok: true, access: process.argv.includes('--paid'), remaining: process.argv.includes('--paid') ? 3 : 0, ready: false };
+      if (route === 'assigned-leads' && process.argv.includes('--paid')) data = { ok: true, page: 1, hasMore: false, rows: [1, 2].map(id => ({
+        id: `local-test-${id}`, name: `로컬 검수 고객 ${id}`, region: '서울', items: id === 1 ? '냉장고' : '세탁기',
+        created_at: new Date().toISOString(), expires_at: new Date(Date.now() + 30 * 86400000).toISOString(),
+        status: 'new', note: '', shared_count: 1, version: 1,
+      })) };
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }).end(JSON.stringify(data)); return;
     }
     const route = url.pathname === '/' ? '/seller/index.html' : url.pathname === '/register' ? '/seller/register/index.html' : url.pathname === '/db-checkout' ? '/db-checkout/index.html' : url.pathname;

@@ -63,6 +63,7 @@
     else if (event.target.closest('[data-seller-tab]')) void refresh();
   });
   document.addEventListener('lead-purchase-updated', () => void refresh(true));
+  document.addEventListener('lead-workspace-updated', () => void refresh(true));
   document.addEventListener('visibilitychange', () => { if (!document.hidden) void refresh(true); });
   window.addEventListener('focus', () => void refresh(true));
   window.addEventListener('pagehide', () => { controller?.abort(); });

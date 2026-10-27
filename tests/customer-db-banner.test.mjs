@@ -25,7 +25,7 @@ test('banner links to checkout with responsive uncropped artwork', () => {
     assert.match(page, /data-lead-inventory/);
     assert.match(page, /class="customer-db-count" data-lead-badge/);
     assert.match(page, /db-banner-fallback/);
-    assert.match(page, /lead-availability.js\?v=20261027-db-badges/);
+    assert.match(page, /lead-availability.js\?v=20261028-allocation-sync/);
   }
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.doesNotMatch(app, /pageHead.hidden = isLeadsTab/);
