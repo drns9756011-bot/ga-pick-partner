@@ -1,0 +1,25 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+
+test('backgrounding never covers the page and returning clears stale covers', () => {
+  const source = readFileSync(path.join(__dirname, '../public/app.js'), 'utf8');
+  const block = source.slice(source.indexOf('document.addEventListener("visibilitychange", () => {'), source.indexOf('function renderRequests()'));
+  const events = {}, document = { hidden: true, addEventListener: (name, fn) => { events[name] = fn; } };
+  let shown = 0, hidden = 0;
+  vm.runInNewContext(block, { document, window: { addEventListener: (name, fn) => { events[name] = fn; } }, showSecurityBlanket: () => shown++, hideSecurityBlanket: () => hidden++ });
+  events.visibilitychange();
+  events.blur?.();
+  assert.equal(shown, 0);
+  assert.equal(events.blur, undefined);
+  document.hidden = false;
+  events.visibilitychange();
+  events.focus();
+  assert.equal(hidden, 2);
+  events.beforeprint();
+  assert.equal(shown, 1);
+  events.afterprint();
+  assert.equal(hidden, 3);
+});
