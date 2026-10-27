@@ -39,7 +39,7 @@
       button.type = 'button'; button.textContent = '상태 확인'; button.onclick = async () => { orderId = order.id; button.disabled = true; try { await showOrder(); } catch (e) { $('notice').textContent = e.message; } finally { button.disabled = false; } };
       info.append(title, sub); item.append(info, button); $('orders').append(item);
     }
-    if (!data.rows.length) $('orders').textContent = '결제 내역이 없습니다.';
+    if (!data.rows.length) $('orders').textContent = '구매 내역이 없습니다.';
   }
   async function showOrder() {
     const { order } = await api(`/orders/${encodeURIComponent(orderId)}`);
@@ -63,7 +63,7 @@
     try {
       if (!token) { $('login').hidden = false; $('notice').textContent = ''; return; }
       const data = await api(); ready = data.ready; $('checkout').hidden = false;
-      $('notice').textContent = !ready ? '카드결제 연결을 준비 중입니다. 고객센터로 문의해주세요.' : data.mode === 'sandbox' ? '테스트 결제 환경입니다. 실제 이용 권한은 부여되지 않습니다.' : `잔여 구매 건수 ${data.remaining}건`;
+      $('notice').textContent = !ready ? '카드결제 연결을 준비 중입니다. 고객센터로 문의해주세요.' : data.mode === 'sandbox' ? '테스트 결제 환경입니다. 실제 이용 권한은 부여되지 않습니다.' : `미배정 DB건수 ${data.remaining}건`;
       update(); if (orderId) await showOrder(); await history();
     } catch (e) { $('notice').textContent = e.message; }
     finally { document.querySelector('main').removeAttribute('aria-busy'); }
