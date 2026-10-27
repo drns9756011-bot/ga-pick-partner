@@ -165,8 +165,8 @@
     <script defer src="/privacy-policy.js?v=20261007-selection-retention"></script>
   <script defer src="/app.js?v=20261027-db-inventory"></script>
   <link rel="stylesheet" href="/lead-workspace.css?v=20261025-leads" />
-    <link rel="stylesheet" href="/customer-db-banner.css?v=20261027-db-inventory" />
-    <script defer src="/lead-availability.js?v=20261027-db-inventory"></script>
+    <link rel="stylesheet" href="/customer-db-banner.css?v=20261027-db-badges" />
+    <script defer src="/lead-availability.js?v=20261027-db-badges"></script>
   <link rel="stylesheet" href="/db-pricing.css?v=20261025-discount" />
   <script defer src="/lead-workspace.js?v=20261025-discount" data-role="seller"></script>
   <script defer src="/seller-recovery.js?v=20261014-secure-recovery"></script>
@@ -492,7 +492,7 @@
           <button type="button" data-seller-tab="closed">종료된 견적</button>
           <button type="button" data-seller-tab="chat">채팅방 <span class="seller-chat-tab-badge" id="sellerChatTabBadge" hidden>0</span></button>
           <button type="button" data-seller-tab="region">매니저 정보 변경</button>
-          <button type="button" data-seller-tab="leads">고객DB</button>
+          <button type="button" data-seller-tab="leads">고객DB <span class="customer-db-count" data-lead-badge title="고객DB 현황 확인 중">0</span></button>
         </div>
 
         <section id="leadWorkspace" aria-label="고객DB" hidden></section>

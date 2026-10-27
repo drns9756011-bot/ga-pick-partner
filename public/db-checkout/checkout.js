@@ -46,6 +46,7 @@
     $('result').hidden = false; $('resultTitle').textContent = statuses[order.status] || '결제 확인';
     $('resultMessage').textContent = order.status === 'paid' ? (order.mode === 'sandbox' ? '테스트 결제가 완료됐습니다. 실제 고객DB 권한이나 건수는 부여되지 않습니다.' : `${order.quantity}건 결제가 확인됐습니다. 관리자가 배정한 고객은 고객DB에서 확인할 수 있습니다.`) : order.status === 'processing' ? '승인 결과를 확인 중입니다. 중복 결제하지 말고 상태를 다시 확인해주세요.' : '결제가 완료되지 않았거나 취소되었습니다. 궁금한 점은 고객센터로 문의해주세요.';
     $('result').scrollIntoView({ block: 'nearest' });
+    if (order.status === 'paid' && order.mode !== 'sandbox') document.dispatchEvent(new Event('lead-purchase-updated'));
   }
   $('verify').onclick = async () => { $('verify').disabled = true; try { await showOrder(); await history(); } catch (e) { $('notice').textContent = e.message; } finally { $('verify').disabled = false; } };
   $('quantity').addEventListener('input', update);

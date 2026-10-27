@@ -7,7 +7,7 @@ test('banner links to checkout with responsive uncropped artwork', () => {
   const html = readFileSync(new URL('../public/seller/index.html', import.meta.url), 'utf8');
   const css = readFileSync(new URL('../public/customer-db-banner.css', import.meta.url), 'utf8');
   assert.match(html, /class="customer-db-banner" href="\/db-checkout"/);
-  assert.match(html, /customer-db-banner.css\?v=20261027-db-inventory/);
+  assert.match(html, /customer-db-banner.css\?v=20261027-db-badges/);
   assert.match(css, /width: min\(100%, 660px\)/);
   assert.match(css, /margin: 0 auto 24px/);
   assert.doesNotMatch(html, /db-banner-copy|db-banner-action/);
@@ -23,12 +23,15 @@ test('banner links to checkout with responsive uncropped artwork', () => {
     const page = readFileSync(new URL(`../public/${file}`, import.meta.url), 'utf8');
     assert.match(page, /class="customer-db-banner"/);
     assert.match(page, /data-lead-inventory/);
+    assert.match(page, /class="customer-db-count" data-lead-badge/);
     assert.match(page, /db-banner-fallback/);
-    assert.match(page, /lead-availability.js\?v=20261027-db-inventory/);
+    assert.match(page, /lead-availability.js\?v=20261027-db-badges/);
   }
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.doesNotMatch(app, /pageHead.hidden = isLeadsTab/);
   assert.match(app, /pageHead.hidden = false/);
+  assert.match(css, /\.db-quantity \{ color: #c62828/);
+  assert.match(css, /\.customer-db-count \{[^}]*color: #c62828/);
 });
 
 test('banner destination is served by the partner Worker without stale cache', async () => {

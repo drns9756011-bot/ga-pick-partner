@@ -8,7 +8,7 @@ test('checkout uses unassigned DB quantity and personal purchase history labels'
   const html = fs.readFileSync(path.join(__dirname, '../public/db-checkout/index.html'), 'utf8');
   const js = fs.readFileSync(path.join(__dirname, '../public/db-checkout/checkout.js'), 'utf8');
   assert.match(html, /<h2>나의 구매 내역<\/h2>/);
-  assert.match(html, /checkout.js\?v=20261027-purchase-labels/);
+  assert.match(html, /checkout.js\?v=20261027-db-badges/);
   assert.match(js, /미배정 DB건수 \$\{data.remaining\}건/);
   assert.match(js, /구매 내역이 없습니다\./);
   assert.doesNotMatch(html + js, /잔여 구매 건수|최근 결제 내역|결제 내역이 없습니다\./);

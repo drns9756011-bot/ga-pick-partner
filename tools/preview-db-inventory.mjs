@@ -15,7 +15,7 @@ const server = createServer(async (req, res) => {
       if (route === 'seller-login') data = { ok: true, row: seller, sessionToken: 'preview-local-session' };
       if (route === 'seller-session') data = { ok: true, lastActivityAt: new Date().toISOString() };
       if (route === 'approved-sellers') data.rows = [seller];
-      if (route === 'lead-availability') data = { ok: true, availableCount: 12, checkedAt: new Date().toISOString() };
+      if (route === 'lead-availability') data = { ok: true, availableCount: 0, waitingCount: 20, assignedCount: process.argv.includes('--paid') ? 2 : 0, unassignedCount: process.argv.includes('--paid') ? 3 : 0, hasPurchased: process.argv.includes('--paid'), checkedAt: new Date().toISOString() };
       if (route === 'lead-payments') data = { ok: true, access: false, remaining: 0, ready: false };
       res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }).end(JSON.stringify(data)); return;
     }
@@ -23,6 +23,7 @@ const server = createServer(async (req, res) => {
     const file = resolve(root, '.' + decodeURIComponent(route));
     if (!file.startsWith(root.endsWith(sep) ? root : root + sep)) { res.writeHead(403).end(); return; }
     let bytes = await readFile(file);
+    if (extname(file) === '.html') bytes = bytes.toString().replace('<title>', '<title>로컬 테스트 · ');
     // Exercise the touch-only styles in a desktop test browser without changing production CSS.
     if (process.argv.includes('--touch') && extname(file) === '.css') bytes = bytes.toString()
       .replaceAll('(hover: hover) and (pointer: fine)', '(min-width: 1101px)')
